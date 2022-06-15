@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block sidebar %}
+{% include 'admin/sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section">
+    
+  <div class="row ">
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="card card-info">
+            <div class="card-statistic-4">
+  
+              <h5 class="font-15" style="text-align: center;">Total Drivers</h5><hr>
+              <!-- <h2 class="mb-3 font-18" style="text-align: center;"></h2> -->
+              <h2 class="mb-3 font-18" style="text-align: center;">{{driver_count}}</h2>
+  
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="card card-info">
+            <div class="card-statistic-4">
+  
+              <h5 class="font-15" style="text-align: center;">Total Completed Trips</h5><hr>
+              <!-- <h2 class="mb-3 font-18" style="text-align: center;"></h2> -->
+              <h2 class="mb-3 font-18" style="text-align: center;">{{completed}}</h2>
+  
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="card card-info">
+            <div class="card-statistic-4">
+  
+              <h5 class="font-15" style="text-align: center;">Total Pending Trips</h5><hr>
+              <!-- <h2 class="mb-3 font-18" style="text-align: center;"></h2> -->
+              <h2 class="mb-3 font-18" style="text-align: center;">{{pending}}</h2>
+  
+            </div>
+          </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

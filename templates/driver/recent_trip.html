@@ -1,0 +1,448 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Driver Dashboard
+{% endblock %}
+
+{% block sidebar %}
+{% include 'driver/sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section">
+    
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-6">
+        <div class="card">
+            <form method="post" action="{% url 'recent_trip' pk %}" onsubmit="return validate()">
+              {% csrf_token %}
+                <div class="card-header">
+                    <h4>Complete Trip</h4>
+                </div>
+                <div class="card-body">
+
+                  {% comment %} <div class="form-group">
+                    <label>Booking Id</label>
+                    <input  id="name" name="booking_id" type="Number" min="1" class="form-control">
+                    <div class="invalid-feedback">
+                        {{ unicorn.errors.company_name.0.message }}
+                  </div> {% endcomment %}
+
+
+                    {% comment %} <div class="form-group">
+                        <label>Driver Name</label>
+                        <div class="form-control border-0">abhi</div>
+                        <input  id="" name="driver_name" value="abhi" readonly type="text" class="form-control">
+                    </div>  {% endcomment %}
+                    
+                    {% comment %} <div class="form-group">
+                        <label>Guest Name</label>
+                        <input  id="" name="guest_name" type="text" class="form-control" required="">
+                        <div class="invalid-feedback">
+                            {{ unicorn.errors.company_name.0.message }}
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea name="guest_address" class="form-control " required=""></textarea>
+                        <div class="invalid-feedback">
+                            {{ unicorn.errors.description.0.message }}
+                        </div>
+                    </div> {% endcomment %}
+                    
+                    {% comment %} <div class="form-group">
+                      <label>Enter Start Date</label>
+                      <input  id="start_date" name="start_date" value="{{trip_details_db.start_date}}" type="date" class="form-control">
+                      
+                      <div class="invalid-feedback">
+                          {{ unicorn.errors.company_name.0.message }}
+                      </div>
+                    </div> {% endcomment %}
+
+                  
+                  
+                  
+                  {% comment %} <div class="form-group">
+                      <label>Enter Start Kilometer</label>
+                      <input  id="" name="start_km" value="{{trip_details_db.start_km}}" type="text" min="1" class="form-control" required="">
+                      <div class="invalid-feedback">
+                          {{ unicorn.errors.company_name.0.message }}
+                      </div>
+                  </div> {% endcomment %}
+
+                  
+
+                  <!--total_days calculation in django_backend(in form submission) -->
+                  <div class="form-group">
+                      <label>End Date</label>
+                      <input  id="end_date" name="end_date" type="date" class="form-control" required="">
+                      <span id="checker"></span>
+                      <div class="invalid-feedback">
+                          {{ unicorn.errors.company_name.0.message }}
+                      </div>
+                  </div>
+
+                  <!--for calculating total-date_time duration on a trip - using javascript-->
+                  <!--for calculating (start_date,start_time -form db) -minus- (end_date,end_time -from input field) using javascript-->
+                  <input  id="start_date" name="start_date" value="{{sdate}}" type="hidden"><!--start date-->
+                  <input  id="start_time" name="start_time" value="{{stime}}" type="hidden"><!--start time-->
+
+                  <!--passing calculated total-date_time to django_backend(in form submission)-->
+                  <input type="hidden" id="total_time" name="total_time">
+
+                  <div class="form-group">
+                      <label>End time</label>
+                      <input  id="end_time" name="end_time" type="time" class="form-control" required="">
+                      <br>
+                      <span id="total_time_span"></span>
+                      
+                      <div class="invalid-feedback">
+                          {{ unicorn.errors.company_name.0.message }}
+                      </div>
+                  </div>
+
+                  <!--total_km calculation in django_backend(in form submission) -->
+                  <div class="form-group">
+                      <label>Enter End Kilometer</label>
+                      <input  id="" name="end_km" type="number" min="{{trip_details_db.start_km|add:'1'}}" class="form-control" required="">
+                      <div class="invalid-feedback">
+                          {{ unicorn.errors.company_name.0.message }}
+                      </div>
+                  </div>
+
+                  {% comment %} <div class="form-group">
+                      <label>Choose Vehicle</label>
+                      <select name="vehicle" id="" required class="form-control">
+                        <option value="" selected disabled>--Select--</option>
+                        <option value="innova">Innova</option>
+                        <option value="traveller">Traveller</option>
+                        <option value="duster">Duster</option>
+                        <option value="bus">bus</option>
+                      </select>
+                  </div> {% endcomment %}
+                    
+                    {% comment %} <div class="form-group">
+                        <label>Phone </label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">+91</span>
+                            </div>
+                        <input unicorn:model.defer="profile.phonenumber" type="text" class="form-control {% if unicorn.errors.phonenumber %} is-invalid {% endif %}">
+                        <div class="invalid-feedback">
+                            {{ unicorn.errors.phonenumber.0.message }}
+                        </div>
+                        </div>
+                    </div> {% endcomment %}
+
+                    {% comment %} <div class="form-group">
+                      <label>Vehicle Number</label>
+                      <input  id="" name="vehicle_number" type="text" min="1" class="form-control" required="">
+                      <div class="invalid-feedback">
+                          {{ unicorn.errors.company_name.0.message }}
+                      </div>
+                  </div> {% endcomment %}
+
+                    <div class="form-group mb-0">
+                        <label>Releasing Address</label>
+                        <textarea  name="releasing_address" id="releasing_address" class="form-control" required=""></textarea>
+                        <div class="invalid-feedback">
+                            {{ unicorn.errors.address.0.message }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group mb-0">
+                        <label id="guest_sign">Guest Signature</label>
+                        <canvas id="signature-pad" class="signature-pad" width=400 height=300></canvas>
+                        <input type="hidden" id="signature" name="guest_signature">
+                    </div>
+
+                    {% comment %} <div class="d-flex justify-content-center p-5 form-control"> {% endcomment %}
+                      {% comment %} <div class="wrapper d-inline-flex p-2 shadow form-control"> {% endcomment %}
+                          {% comment %} <div class="d-flex flex-column">
+                            <canvas id="signature-pad" class="signature-pad" width=500 height=300></canvas>
+                          </div> {% endcomment %}
+                      {% comment %} </div> {% endcomment %}
+                    {% comment %} </div> {% endcomment %}
+
+
+                </div>
+                <div class="card-footer text-right">
+                    {% comment %} <button class="btn btn-primary">Save</button> {% endcomment %}
+                    
+                    <a href="#signature-pad" id="clear-signature" class="btn btn-secondary btn-sm">Clear</a>
+                    <button id="save" class="btn btn-primary btn-sm">End Trip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+   
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+  <script>
+    var canvas = document.getElementById('signature-pad');
+    var signaturePad = new SignaturePad(canvas, {
+      minWidth: 1,
+      maxWidth: 2,
+      penColor: 'rgb(0, 0, 0)'
+    });
+
+    document.getElementById('clear-signature').addEventListener('click', function () {
+      signaturePad.clear();
+    });
+
+    document.getElementById('save').addEventListener('click', function () {
+      if (signaturePad.isEmpty()) {
+        alert('Please provide signature first.');
+      } else {
+        var dataURL = signaturePad.toDataURL();
+        document.getElementById('signature').value = dataURL;
+      }
+    });
+  </script>
+
+  <script>
+    $( document ).ready(function() {
+       
+      //alert('end_time text','{{stimea}}');
+      //alert('end_time db','{{trip_details_db.start_time}}');
+      //alert('end_time 1',$("#start_time").val());
+      //alert('end_time 2',document.getElementById('start_time').value);
+        
+
+
+        {% comment %} 
+        $("#end_date").on('change',function(){
+          //var minute=$("#duration").val(); 
+          alert('end_date')
+          var d1 =document.getElementById('start_date').value;
+          var d2 =document.getElementById('end_date').value;
+          const dateOne = new Date(d1);
+          const dateTwo = new Date(d2);
+          console.log(typeof(d1))
+          console.log(typeof(d2))
+          const time = Math.abs(dateTwo - dateOne);
+          const days = Math.ceil(time / (1000 * 60 * 60 * 24));
+          alert(days);
+          console.log(days);
+          //$("#checker").html(days);  
+
+          document.getElementById('checker').innerHTML=days;
+
+        }); {% endcomment %}
+
+
+        $("#end_date, #end_time").on('change',function(){
+          //var minute=$("#duration").val(); 
+          //alert('end_time',$("#end_time").val());
+          //alert('end_time',document.getElementById('end_time').value);
+
+          //var t1 =parseInt(document.getElementById('start_time').value);
+          //var t2 =parseInt(document.getElementById('end_time').value);
+
+          var d1 =document.getElementById('start_date').value;
+          var d2 =document.getElementById('end_date').value;
+
+          var t1 =document.getElementById('start_time').value;
+          var t2 =document.getElementById('end_time').value;
+
+          //var iNum = parseInt(sVal); 
+
+          console.log(t1)
+          console.log(t2)
+          console.log(typeof(t1))
+          console.log(typeof(t2))
+
+           //first date-time
+          //var str = 'Hello, World, etc';
+          var array_dateOne = d1.split('-');
+          var array_timeOne = t1.split(':');
+          //array_dateOne
+          for(var i = 0; i < array_dateOne.length; i++) {
+            // Trim the excess whitespace.
+            array_dateOne[i] = array_dateOne[i].replace(/^\s*/, "").replace(/\s*$/, "");
+            // Add additional code here, such as:
+            //alert(array_dateOne[i]);
+          }
+          //array_timeOne
+          for(var i = 0; i < array_timeOne.length; i++) {
+            // Trim the excess whitespace.
+            array_timeOne[i] = array_timeOne[i].replace(/^\s*/, "").replace(/\s*$/, "");
+            // Add additional code here, such as:
+            //alert(array_timeOne[i]);
+          }
+
+          //second date-time
+          var array_dateTwo = d2.split('-');
+          var array_timeTwo = t2.split(':');
+          //array_dateTwo
+          for(var i = 0; i < array_dateTwo.length; i++) {
+            // Trim the excess whitespace.
+            array_dateTwo[i] = array_dateTwo[i].replace(/^\s*/, "").replace(/\s*$/, "");
+            // Add additional code here, such as:
+            //alert(array_dateTwo[i]);
+          }
+          //array_timeTwo
+          for(var i = 0; i < array_timeTwo.length; i++) {
+            // Trim the excess whitespace.
+            array_timeTwo[i] = array_timeTwo[i].replace(/^\s*/, "").replace(/\s*$/, "");
+            // Add additional code here, such as:
+            //alert(array_timeTwo[i]);
+          }
+
+          //console.log(parseInt(array_timeOne[0]),':',parseInt(array_timeOne[1]), typeof(parseInt(array_timeOne)))
+          //console.log(array_timeTwo[0],':',array_timeTwo[1], typeof(array_timeTwo))
+
+          console.log(array_dateOne)
+          console.log(array_dateTwo)
+
+                    
+
+          //var t1=$("#start_time").val(); 
+          //var t2=$("#end_time").val(); 
+          //const timeOne = new Date(2000, 0, 1, 10, 0);
+          //const timeTwo = new Date(2000, 0, 1, 10, 15);
+          const timeOne = new Date(parseInt(array_dateOne[0]), parseInt(array_dateOne[1]), parseInt(array_dateOne[2]), parseInt(array_timeOne[0]), parseInt(array_timeOne[1]));
+          const timeTwo = new Date(parseInt(array_dateTwo[0]), parseInt(array_dateTwo[1]), parseInt(array_dateTwo[2]), parseInt(array_timeTwo[0]), parseInt(array_timeTwo[1]));
+
+          if (timeTwo < timeOne){
+            timeTwo.setDate(dateTwo.getDate() + 1);
+          }
+          var diff = timeTwo - timeOne; // milliseconds
+
+          //convert milliseconds to hour
+          var msec = diff;
+          var hh = Math.floor(msec / 1000 / 60 / 60);
+          msec -= hh * 1000 * 60 * 60;
+          var mm = Math.floor(msec / 1000 / 60 );
+          msec -= mm * 1000 * 60;
+          var ss = Math.floor(msec / 1000);
+          msec -= ss * 1000;
+
+          // diff = 28800000 => hh = 8, mm = 0, ss = 0, msec =0
+          
+          //alert(hh+mm);
+          
+          //$("#checker").html(days);  
+
+          var hDisplay = hh > 0 ? hh + (hh == 1 ? " hour, " : " hours, ") : "";
+          var mDisplay = mm > 0 ? mm + (mm == 1 ? " minute, " : " minutes, ") : "";
+          var result= hDisplay + mDisplay;
+
+          //document.getElementById('checker2').innerHTML='Total Time :'+hh+':'+mm + 'hr';
+          document.getElementById('total_time_span').innerHTML='Total Time : '+ result;
+          $("#total_time").attr('value',result);
+
+      });
+
+
+
+
+
+
+
+
+
+    });
+
+
+    
+    </script>
+
+
+
+
+  {% comment %} Places search area  {% endcomment %}
+  <script>
+    $( function() {
+
+      var result = [];
+
+      $("#releasing_address").on('keypress',function(){
+
+
+        var search = $('#releasing_address').val();
+        var token  = "pk.eyJ1Ijoia2V2b2pvcCIsImEiOiJjbDQ5azlsZW8wNmZ1M2hvNzcwcGpvMjNpIn0.UpQvTFXdpCC2JQvkM3ZYfw";
+        $.getJSON('https://api.mapbox.com/geocoding/v5/mapbox.places/'+search+'.json?country=in&proximity=ip&language=en&access_token='+token, function(json_data){
+          
+          //console.log(json_data,typeof(json_data));
+          for(var i=0; i<json_data.features.length; i++)
+          {
+              //var listItem = document.createElement("LI");
+
+              //result = json_data.features[i].place_name;
+              //result.push(json_data.features[i].place_name);
+              //console.log(result,typeof(result));
+
+              
+              
+              //console.log(json_data.features[i].place_name);
+
+              //result.push(json_data.features[i].place_name) //list append
+
+              result[i] = json_data.features[i].place_name; //dict
+              
+              
+              //console.log(typeof(abc));
+              
+            } 
+            
+            
+            
+        }); //end
+
+        //console.log(result,typeof(result),'result new')
+        
+      }); //onchange end
+      
+
+
+      $( "#releasing_address" ).autocomplete({
+        source: result
+          }); 
+     
+
+
+      }); // auto call function end
+  </script>
+
+
+
+{% comment %} form submit validation {% endcomment %}
+<script>
+  function validate() {
+
+   var valid = document.getElementById('signature').value == '';
+   console.log(valid);
+   if(valid != '' ){
+     //alert('Please Fill Signature');
+
+     document.getElementById("guest_sign").style.color = "red";
+     return false;
+   
+   }
+   else{
+     //alert('validation successfull new');
+     return true;
+   }
+
+
+   }
+
+   $("#signature-pad").on('click',function(){
+     document.getElementById("guest_sign").style.color = "black";
+   });
+
+</script>
+
+
+  
+
+
+{% endblock scripts %}

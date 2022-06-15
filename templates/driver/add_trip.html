@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Driver Dashboard
+{% endblock %}
+
+{% block sidebar %}
+{% include 'driver/sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section">
+
+
+        {% if not already_tripExist == 1 %}
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="card">
+                    <form method="post" action="{% url 'add_trip' %}" onsubmit="return validate()">
+                      {% csrf_token %}
+                        <div class="card-header">
+                            <h4>Add New Trip</h4>
+                        </div>
+                        <div class="card-body">
+
+                          <div class="form-group">
+                            <label>Booking Id</label>
+                            <input  id="name" name="booking_id" type="Number" min="1" class="form-control">
+                            <div class="invalid-feedback">
+                                {{ unicorn.errors.company_name.0.message }}
+                          </div>
+
+
+                            <div class="form-group">
+                                <label>Driver Name</label>
+                                {% comment %} <div class="form-control border-0">abhi</div> {% endcomment %}
+                                <input  id="" name="driver_name" value="{{request.user.driver.name}}" readonly type="text" class="form-control">
+                            </div> 
+                            
+                            <div class="form-group">
+                                <label>Guest Name</label>
+                                <input  id="" name="guest_name" type="text" class="form-control" required="">
+                                <div class="invalid-feedback">
+                                    {{ unicorn.errors.company_name.0.message }}
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea name="guest_address" class="form-control " required=""></textarea>
+                                <div class="invalid-feedback">
+                                    {{ unicorn.errors.description.0.message }}
+                                </div>
+                            </div>
+
+                          </div>
+                          <div class="form-group">
+                              <label>Enter Start Date</label>
+                              <input  id="" name="start_date" type="date" class="form-control" required="">
+                              <div class="invalid-feedback">
+                                  {{ unicorn.errors.company_name.0.message }}
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label>Enter Start time</label>
+                              <input  id="" name="start_time" type="time" class="form-control" required="">
+                              <div class="invalid-feedback">
+                                  {{ unicorn.errors.company_name.0.message }}
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label>Enter Start Kilometer</label>
+                              <input  id="" name="start_km" type="number" min="1" class="form-control" required="">
+                              <div class="invalid-feedback">
+                                  {{ unicorn.errors.company_name.0.message }}
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                              <label>Choose Vehicle</label>
+                              <select name="vehicle" id="" required class="form-control">
+                                <option value="" selected disabled>--Select--</option>
+                                <option value="innova">Innova</option>
+                                <option value="traveller">Traveller</option>
+                                <option value="duster">Duster</option>
+                                <option value="bus">bus</option>
+                              </select>
+                          </div>
+                            
+                            {% comment %} <div class="form-group">
+                                <label>Phone </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">+91</span>
+                                    </div>
+                                <input unicorn:model.defer="profile.phonenumber" type="text" class="form-control {% if unicorn.errors.phonenumber %} is-invalid {% endif %}">
+                                <div class="invalid-feedback">
+                                    {{ unicorn.errors.phonenumber.0.message }}
+                                </div>
+                                </div>
+                            </div> {% endcomment %}
+
+                            <div class="form-group">
+                              <label>Vehicle Number</label>
+                              <input  id="" name="vehicle_number" type="text" min="1" class="form-control" required="">
+                              <div class="invalid-feedback">
+                                  {{ unicorn.errors.company_name.0.message }}
+                              </div>
+                          </div>
+
+                            <div class="form-group mb-0">
+                                <label>Reporting Address</label>
+                                <textarea  name="reporting_address" id="reporting_address" class="form-control " required=""></textarea>
+                                <div class="invalid-feedback">
+                                    {{ unicorn.errors.address.0.message }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group mb-0">
+                                <label id="driver_sign">Driver Signature</label>
+                                <canvas id="signature-pad" class="signature-pad" width=400 height=300 required></canvas>
+                                <input type="hidden" id="signature" name="driver_signature">
+                            </div>
+
+                            {% comment %} <div class="d-flex justify-content-center p-5 form-control"> {% endcomment %}
+                              {% comment %} <div class="wrapper d-inline-flex p-2 shadow form-control"> {% endcomment %}
+                                  {% comment %} <div class="d-flex flex-column">
+                                    <canvas id="signature-pad" class="signature-pad" width=500 height=300></canvas>
+                                  </div> {% endcomment %}
+                              {% comment %} </div> {% endcomment %}
+                            {% comment %} </div> {% endcomment %}
+
+
+                        </div>
+                        <div class="card-footer text-right">
+                            {% comment %} <button class="btn btn-primary">Save</button> {% endcomment %}
+                            
+                            <a href="#signature-pad" id="clear-signature" class="btn btn-secondary btn-sm">Clear</a>
+                            <button id="save" class="btn btn-primary btn-sm">Add Trip</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </div>
+
+          {% else %}
+
+          <!--driver on a trip condition-->
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-6">
+          <div class="row justify-content-center" >
+            <div class="card" >
+
+                  <div class="card-header" >
+                    <h4>Alert</h4>
+                  </div>
+
+                  <div class="empty-state" data-height="400" style="height: 400px;">
+                    <div class="empty-state-icon">
+                      <i class="fas fa-question"></i>
+                    </div>
+                    <h2>Please Complete Your Trip</h2>
+                    <p class="lead">
+                      Sorry you can't add any trip details, you are on a trip.
+                    </p>
+                    <a href="{% url 'recent_triplist' %}" class="btn btn-primary mt-4">Go to Recent Trip</a>
+                    <a href="#" class="mt-4 bb">Need Help?</a>
+                  </div>
+                 
+                </div>
+            </div>
+          </div>
+
+          {% endif %}
+    
+          
+          
+        
+        {% comment %} <span>Driver Signature</span>
+        <div class="d-flex justify-content-center p-5">
+            <div class="wrapper d-inline-flex p-2 shadow">
+                <div class="d-flex flex-column">
+                  <canvas id="signature-pad" class="signature-pad" width=500 height=300></canvas>
+                  <div class="d-flex justify-content-between"><i class="text-secondary">Draw your signature</i><button id="clear-signature" class="btn btn-secondary btn-sm position-relative">Clear</button></div>
+                </div>
+            </div>
+          </div>
+          
+          <input type="text" id="signature" name="driver_signature">
+          <button id="save" class="btn btn-primary btn-sm">Save</button> {% endcomment %}
+    
+   
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+
+{% comment %} signature logic area {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+  <script>
+    var canvas = document.getElementById('signature-pad');
+    var signaturePad = new SignaturePad(canvas, {
+      minWidth: 1,
+      maxWidth: 2,
+      penColor: 'rgb(0, 0, 0)'
+    });
+
+    document.getElementById('clear-signature').addEventListener('click', function () {
+      signaturePad.clear();
+    });
+
+    document.getElementById('save').addEventListener('click', function () {
+      if (signaturePad.isEmpty()) {
+        alert('Please provide signature first.');
+      } else {
+        var dataURL = signaturePad.toDataURL();
+        document.getElementById('signature').value = dataURL;
+      }
+    });
+</script>
+
+
+  {% comment %} Places search area  {% endcomment %}
+  <script>
+        $( function() {
+
+          var result = [];
+
+          $("#reporting_address").on('keypress',function(){
+
+
+            var search = $('#reporting_address').val();
+            var token  = "pk.eyJ1Ijoia2V2b2pvcCIsImEiOiJjbDQ5azlsZW8wNmZ1M2hvNzcwcGpvMjNpIn0.UpQvTFXdpCC2JQvkM3ZYfw";
+            $.getJSON('https://api.mapbox.com/geocoding/v5/mapbox.places/'+search+'.json?country=in&proximity=ip&language=en&access_token='+token, function(json_data){
+              
+              //console.log(json_data,typeof(json_data));
+              for(var i=0; i<json_data.features.length; i++)
+              {
+                  //var listItem = document.createElement("LI");
+  
+                  //result = json_data.features[i].place_name;
+                  //result.push(json_data.features[i].place_name);
+                  //console.log(result,typeof(result));
+
+                  
+                  
+                  //console.log(json_data.features[i].place_name);
+
+                  //result.push(json_data.features[i].place_name) //list append
+
+                  result[i] = json_data.features[i].place_name; //dict
+                  
+                  
+                  //console.log(typeof(abc));
+                  
+                } 
+                
+                
+                
+            }); //end
+
+            //console.log(result,typeof(result),'result new')
+            
+          }); //onchange end
+          
+
+
+          $( "#reporting_address" ).autocomplete({
+            source: result
+              }); 
+         
+
+
+          }); // auto call function end
+  </script>
+
+
+{% comment %} form submit validation {% endcomment %}
+<script>
+     function validate() {
+
+      var valid = document.getElementById('signature').value == '';
+      console.log(valid);
+      if(valid != '' ){
+        //alert('Please Fill Signature');
+
+        document.getElementById("driver_sign").style.color = "red";
+        return false;
+      
+      }
+      else{
+        //alert('validation successfull new');
+        return true;
+      }
+
+
+      }
+
+      $("#signature-pad").on('click',function(){
+        document.getElementById("driver_sign").style.color = "black";
+      });
+
+  </script>
+
+  
+  
+{% endblock scripts %}

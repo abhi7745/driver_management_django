@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Driver Dashboard
+{% endblock %}
+
+{% block sidebar %}
+{% include 'driver/sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section">
+    
+    <div class="section-body">
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h4>Recent Trip List
+                  <!-- <a href="" style="margin-left: 10px;" class="btn btn-primary">Add
+                    <i style="margin-left: 15px;" class="fas fa-plus"></i>
+                  </a> -->
+                </h4>
+                <div class="card-header-form">
+                  <!-- Search form -->
+                  <form action="#">
+                    <!-- {% csrf_token %} -->
+                  <div class="input-group">
+                    <input style="{% if required %} border:1px solid red; {% endif %}" type="text" value="{{ search_key }}" 
+                    class="form-control" name="search_key" placeholder="Search" id="search_key">
+                    <div class="input-group-btn">
+                      <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                    </div>
+                  </div>
+                </form>
+                {% if required %}
+                <label for="" style="margin-left: 15px;color:  red;"> Search Key Required</label>
+                {% endif %}
+                  </div>
+    
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped" id="table-2">
+                    <thead>
+                      <tr>
+                        <!-- <th class="text-center pt-3">
+                          <div class="custom-checkbox custom-checkbox-table custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad"
+                              class="custom-control-input" id="checkbox-all">
+                            <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </th> -->
+                        {% comment %} <th>Driver_Name</th> {% endcomment %}
+                        <th>Guest_Name</th>
+                        <th>Address</th>
+                        <th>Vehicle</th>
+                        <th>Start_date</th>
+                        <th>Start_time</th>
+                        <th>Start_KM</th>
+                        <th>More</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                        
+                      {% for x in trip_details_db %}
+                      <tr>
+                        <!-- <td class="text-center pt-2">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
+                              id="checkbox-1">
+                            <label for="checkbox-1" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </td> -->
+    
+                        <td>{{x.guest_name}}</td>
+                        <td>{{x.address}}</td>
+                        <td>{{x.vehicle}}</td>
+                        <td>{{x.start_date}}</td>
+                        <td>{{x.start_time}}</td>
+                        <td>{{x.start_km}}</td>
+
+                        <td><a href="{% url 'recent_trip' x.id %}" class="btn btn-primary">Complete Trip</a></td>
+
+                      </tr>
+    
+                     
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+    
+              {% if not_found %}
+              <label for="" style="text-align: center !important;">Not Found</label><br>
+              {% elif trip_details_db|length == 0 %}
+              <label style="text-align: center !important;">Not Available</label><br>
+              {% endif %}
+
+    
+    
+    
+    
+    
+            </div>
+          </div>
+        </div>
+
+        
+    
+    </div>
+
+</section>
+
+{% endblock %}
