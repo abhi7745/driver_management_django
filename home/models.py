@@ -44,7 +44,8 @@ class Trip_details(models.Model):
     end_date=models.DateField(auto_now=False, auto_now_add=False,null=True,blank=True)
     end_time=models.TimeField(auto_now=False, auto_now_add=False,null=True,blank=True)
     end_km=models.IntegerField(null=True,blank=True)
-    review=models.CharField(max_length=2048)
+    remark=models.CharField(max_length=2048)
+    # nextdayuse=models.CharField(max_length=2048)
     status=models.CharField(max_length=50,default='pending')
 
     total_time=models.CharField(max_length=255)
@@ -57,3 +58,21 @@ class Trip_details(models.Model):
 
     def __str__(self):
         return self.guest_name
+
+
+
+
+
+class route(models.Model):
+    driver_id=models.ForeignKey(Driver,on_delete=models.CASCADE)
+    trip_id=models.ForeignKey(Trip_details,on_delete=models.CASCADE)
+    route=models.CharField(max_length=1024)
+
+    def __str__(self):
+        return self.route
+
+
+
+# class Instruction(models.Model):
+#     title=models.CharField(max_length=255)
+#     content=models.CharField(max_length=3000)

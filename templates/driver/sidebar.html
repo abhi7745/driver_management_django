@@ -12,9 +12,9 @@
         <li class="dropdown">
             <a href="{% url 'add_trip' %}" class="nav-link"><i data-feather="plus"></i><span>Add Trip</span></a>
         </li>
-        <li class="dropdown">
+        {% comment %} <li class="dropdown">
             <a href="{% url 'recent_triplist' %}" class="nav-link"><i data-feather="list"></i><span>Recent Trips</span></a>
-        </li>
+        </li> {% endcomment %}
         {% comment %} <li class="dropdown">
             <a href="#" class="menu-toggle nav-link has-dropdown"><i
                     data-feather="briefcase"></i><span>Widgets</span></a>

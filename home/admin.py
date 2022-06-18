@@ -8,3 +8,4 @@ from home.models import *
 admin.site.register(User)
 admin.site.register(Driver)
 admin.site.register(Trip_details)
+admin.site.register(route)

@@ -45,7 +45,7 @@ def signup(request):
 
         if(request.user.role =='admin'):
             print('admin is already logged in')
-            return redirect('/dashboard')
+            return redirect('dashboard')
 
         elif(request.user.role =='driver'):
             print('driver is already logged in')
@@ -118,47 +118,61 @@ def signup(request):
 
 
 def loginpage(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        pswd = request.POST.get('pswd')
 
-        print(email)
-        print(pswd)
+    # user already logged in area (case 1)
+    if request.user.is_authenticated: 
+        print(request.user,'User already logged in')
+
+        if(request.user.role =='admin'):
+            print('admin is already logged in')
+            return redirect('dashboard')
+
+        elif(request.user.role =='driver'):
+            print('driver is already logged in')
+            return redirect('add_trip') 
+
+    else:
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            pswd = request.POST.get('pswd')
+
+            print(email)
+            print(pswd)
 
 
-        if(email== '' or pswd==''):
-            print('No value')
-            context={'static_mail':email,'user_error':'Please enter valid info...'}
-            return render(request,'home/index.html',context)
-
-        else:
-
-            user =authenticate(request, username=email, password=pswd) # check the user is valid
-            print(user)
-
-            if user is not None:
-                login(request, user) #login is hold uservalue(request&user), and added to django_section database
-                print(type(user),user)
-                print('User Login succesfull')
-
-                # admin login condition
-                if(request.user.role =='admin'):
-                    print('admin is logged in')
-                    return redirect('/') 
-
-                # driver login condition
-                elif(request.user.role =='driver'):
-                    print('driver is logged in')
-                    return redirect('add_trip')   
-
-            else:
-                print(user,'user')
-                print('login failed')
-                context={'static_mail':email,'user_error':'Invalid Email & Password'}
+            if(email== '' or pswd==''):
+                print('No value')
+                context={'static_mail':email,'user_error':'Please enter valid info...'}
                 return render(request,'home/index.html',context)
 
-    
-    return render(request,'home/index.html')
+            else:
+
+                user =authenticate(request, username=email, password=pswd) # check the user is valid
+                print(user)
+
+                if user is not None:
+                    login(request, user) #login is hold uservalue(request&user), and added to django_section database
+                    print(type(user),user)
+                    print('User Login succesfull')
+
+                    # admin login condition
+                    if(request.user.role == 'admin'):
+                        print('admin is logged in')
+                        return redirect('dashboard') 
+
+                    # driver login condition
+                    elif(request.user.role =='driver'):
+                        print('driver is logged in')
+                        return redirect('add_trip')   
+
+                else:
+                    print(user,'user')
+                    print('login failed')
+                    context={'static_mail':email,'user_error':'Invalid Email & Password'}
+                    return render(request,'home/index.html',context)
+
+        
+        return render(request,'home/index.html')
 
 
 
@@ -178,12 +192,23 @@ from django.core.files.base import ContentFile
 @login_required(login_url="signup")
 @role_required_decorator(allowed_roles=['driver'])
 def add_trip(request):
+
+    already_tripExist=Trip_details.objects.filter(driver_id=request.user.id,status='pending').count()
+    print(already_tripExist)
+
+    if Trip_details.objects.filter(driver_id=request.user.id,status='pending').exists():
+        trip_details_db=Trip_details.objects.get(driver_id=request.user.id,status='pending')
+
+        print('Trip_exist')
+
+        context={'already_tripExist':already_tripExist,'trip_details_db':trip_details_db}
+        return render(request,'driver/add_trip.html',context)
     
-    if request.method == 'POST':
+    elif request.method == 'POST':
         booking_id = request.POST.get('booking_id')
         driver_name = request.POST.get('driver_name')
         guest_name = request.POST.get('guest_name')
-        guest_address = request.POST.get('guest_address')
+        # guest_address = request.POST.get('guest_address')
         start_date = request.POST.get('start_date')
         start_time = request.POST.get('start_time')
         start_km = request.POST.get('start_km')
@@ -209,7 +234,7 @@ def add_trip(request):
             booking_id=booking_id,
             driver_name=driver_name,
             guest_name=guest_name,
-            address=guest_address,
+            # address=guest_address,
             start_date=start_date,
             start_time=start_time,
             start_km=start_km,
@@ -221,20 +246,53 @@ def add_trip(request):
         )
         print('New trip created')
 
-    already_tripExist=Trip_details.objects.filter(driver_id=request.user.id,status='pending').count()
-    print(already_tripExist)
     context={'already_tripExist':already_tripExist}
     return render(request,'driver/add_trip.html',context)
 
+# add_trip sub view
 @login_required(login_url="signup")
 @role_required_decorator(allowed_roles=['driver'])
-def recent_triplist(request):
-    trip_details_db=Trip_details.objects.filter(status='pending',driver_id=request.user.id)
+def add_route(request,pk):
 
-    context={'trip_details_db':trip_details_db}
-    return render(request,'driver/recent_triplist.html',context)
+    route_db=route.objects.filter(driver_id=request.user.id,trip_id=pk)
 
-# recent_triplist sub 
+    if request.method == 'POST':
+        route_address = request.POST.get('route_address')
+
+        print(route_address)
+
+        if route.objects.filter(driver_id=request.user.id,trip_id=pk,route__contains=route_address).exists():
+            print('Route location already exist')
+            context={'route_db':route_db,'pk':pk,'alreadyExist':'Route location already exist'}
+            return render(request,'driver/add_route.html',context)
+
+        else:
+            route.objects.create(
+                driver_id=request.user.driver,
+                trip_id=Trip_details.objects.get(id=pk),
+                route=route_address
+            )
+            print('route saved')
+
+    
+   
+
+    context={'route_db':route_db,'pk':pk}
+    return render(request,'driver/add_route.html',context)
+
+
+# @login_required(login_url="signup")
+# @role_required_decorator(allowed_roles=['driver'])
+# def recent_triplist(request):
+#     trip_details_db=Trip_details.objects.filter(status='pending',driver_id=request.user.id)
+
+#     context={'trip_details_db':trip_details_db}
+#     return render(request,'driver/recent_triplist.html',context)
+
+
+
+
+# add_trip sub view
 # from datetime import datetime
 # import datetime as dt
 
@@ -275,6 +333,7 @@ def recent_trip(request,pk):
             total_time = request.POST.get('total_time')# total_time is calculated by javascript from 'html form'
             end_km = request.POST.get('end_km')
             releasing_address = request.POST.get('releasing_address')
+            remark = request.POST.get('remark')
             guest_signature = request.POST.get('guest_signature')
 
             print(total_time,'???????????????????????? total_time ??????????????????????')
@@ -339,6 +398,7 @@ def recent_trip(request,pk):
             trip_details_db.end_date=end_date
             trip_details_db.end_time=end_time
             trip_details_db.end_km=end_km
+            trip_details_db.remark=remark
             trip_details_db.releasing_address=releasing_address
             trip_details_db.guest_signature=base64P_png
             trip_details_db.total_time=total_time
@@ -543,8 +603,9 @@ def dutyslip(request,pk):
     if Trip_details.objects.filter(id=pk,status='completed').exists():
         trip_details_db=Trip_details.objects.get(id=pk,status='completed')
 
-        context={'trip_details_db':trip_details_db}
+        route_db=route.objects.filter(trip_id=pk)
 
+        context={'trip_details_db':trip_details_db,'route_db':route_db}
         return render(request,'admin/dutyslip.html',context)
 
     else:

@@ -21,7 +21,7 @@ Driver Dashboard
                     <form method="post" action="{% url 'add_trip' %}" onsubmit="return validate()">
                       {% csrf_token %}
                         <div class="card-header">
-                            <h4>Add New Trip</h4>
+                            <h4>Add New Trip -> Step-1</h4>
                         </div>
                         <div class="card-body">
 
@@ -44,16 +44,26 @@ Driver Dashboard
                                 <input  id="" name="guest_name" type="text" class="form-control" required="">
                                 <div class="invalid-feedback">
                                     {{ unicorn.errors.company_name.0.message }}
-                            </div>
-                            <div class="form-group">
-                                <label>Address</label>
-                                <textarea name="guest_address" class="form-control " required=""></textarea>
-                                <div class="invalid-feedback">
-                                    {{ unicorn.errors.description.0.message }}
-                                </div>
+                                  </div>
                             </div>
 
-                          </div>
+                            {% comment %} <div class="form-group">
+                              <label>Address</label>
+                              <textarea name="guest_address" class="form-control " required=""></textarea>
+                              <div class="invalid-feedback">
+                                  {{ unicorn.errors.description.0.message }}
+                              </div>
+                            </div> {% endcomment %}
+
+
+                            <div class="form-group mb-0">
+                              <label>Reporting Address</label>
+                              <textarea  name="reporting_address" id="reporting_address" class="form-control " required=""></textarea>
+                              <div class="invalid-feedback">
+                                  {{ unicorn.errors.address.0.message }}
+                              </div>
+                            </div>
+
                           <div class="form-group">
                               <label>Enter Start Date</label>
                               <input  id="" name="start_date" type="date" class="form-control" required="">
@@ -108,13 +118,7 @@ Driver Dashboard
                               </div>
                           </div>
 
-                            <div class="form-group mb-0">
-                                <label>Reporting Address</label>
-                                <textarea  name="reporting_address" id="reporting_address" class="form-control " required=""></textarea>
-                                <div class="invalid-feedback">
-                                    {{ unicorn.errors.address.0.message }}
-                                </div>
-                            </div>
+                            
                             <br>
                             <div class="form-group mb-0">
                                 <label id="driver_sign">Driver Signature</label>
@@ -163,7 +167,7 @@ Driver Dashboard
                     <p class="lead">
                       Sorry you can't add any trip details, you are on a trip.
                     </p>
-                    <a href="{% url 'recent_triplist' %}" class="btn btn-primary mt-4">Go to Recent Trip</a>
+                    <a href="{% url 'add_route' trip_details_db.id %}" class="btn btn-primary mt-4">Go to Recent Trip</a>
                     <a href="#" class="mt-4 bb">Need Help?</a>
                   </div>
                  

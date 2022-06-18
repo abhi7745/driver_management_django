@@ -27,11 +27,14 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="nav_hider">
         
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           
           <div class="form-inline my-2 my-lg-0 m-auto">
-            {% comment %} <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> {% endcomment %}
+            
             <a href="{% url 'trip_list' %}" class="btn btn-outline-success my-2 my-sm-0" style="margin-right:10px;">Back</a>
             <button class="btn btn-outline-success my-2 my-sm-0" id="print" onclick="print_body();">Print</button>
             </div>
@@ -64,7 +67,7 @@
                 <h5>Vehicle type : {{trip_details_db.vehicle|title}}</h5>
                 <h5>Vehicle Number: {{trip_details_db.vehicle_number|capfirst}}</h5>
                 <h5>Driver : {{trip_details_db.driver_name|title}}</h5>
-                <h5>Remarks:</h5>
+                {% comment %} <h5>Remarks:</h5> {% endcomment %}
             </div>
           </div>
         </div>
@@ -159,17 +162,26 @@
             <th colspan="2"></th>
         </tr>
         <tr>
-            <td style="height: 45px;">Remarks</td>
+            <td style="height: 45px;">Remarks : {{trip_details_db.remark}}</td>
             <td style="text-align:center;">
                 <img src="{{trip_details_db.guest_signature.url}}" alt="signature" width="90px" height="50px">
             </td>
         </tr>
         <tr>
-            <td colspan="2" style="height: 45px;">{{trip_details_db.reporting_address}} - {{trip_details_db.releasing_address}}</td>
+            <td colspan="2" style="height: 45px;padding-left: 11px;">
+                <span style="font-weight:bold;">Reporting Address :</span> {{trip_details_db.reporting_address}} <br><br>
+                
+                <span style="font-weight:bold;">Routes :-</span>
+                <ol>
+                    {% for x in route_db %}
+                    <li>{{x.route}}</li>
+                    {% endfor %}
+                </ol>
+                <span style="font-weight:bold;">Releasing Address : </span>{{trip_details_db.releasing_address}}</td>
         </tr>
-        <tr>
+        {% comment %} <tr>
             <td colspan="2">Instruction for next day use:</td>
-        </tr>
+        </tr> {% endcomment %}
 
     </table>
 

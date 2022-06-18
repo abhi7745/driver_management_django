@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Driver Dashboard
+{% endblock %}
+
+{% block sidebar %}
+{% include 'driver/sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="section">
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="card">
+                    <form method="post" action="{% url 'add_route' pk %}">
+                      {% csrf_token %}
+                        <div class="card-header">
+                            <h4>Add Routes -> Step-2</h4>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group mb-0">
+                                <label>Route Address 
+                                    {% if alreadyExist %}
+                                    <span style="color:red;">: {{alreadyExist}}</span>
+                                    {% endif %}
+                                </label>
+                                <textarea  name="route_address" id="route_address" class="form-control " required=""></textarea>
+                                <br>
+
+                                {% for route in route_db %}
+                               
+                                <h6> {{forloop.counter}}: {{route.route}}</h6>
+                                {% endfor %}
+                            </div>
+                           
+
+                            
+
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary">Add Route</button>
+                            
+                            {% comment %} <a href="#signature-pad" id="clear-signature" class="btn btn-secondary btn-sm">Clear</a> {% endcomment %}
+                            {% comment %} <button id="save" class="btn btn-primary btn-sm">Add Trip</button> {% endcomment %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </div>
+
+
+        {% if route_db.count > 0 %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="card">
+                  
+                        <div class="card-header" style="justify-content:space-between;">
+                            <h4>Complete Trip -> Step-3</h4>
+                            <a href="" id="" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
+                                Complete</a>
+                        </div>
+                       
+                   
+                </div>
+            </div>
+          </div>
+                
+          {% endif %}
+        
+    
+
+    </section>
+
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Alert</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                {% comment %} Do you want to complete your whole trip?  {% endcomment %}
+                Enter complete route details and then Go to step-3
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                {% comment %} <button type="button" class="btn btn-primary">Go</button> {% endcomment %}
+                <a href="{% url 'recent_trip' pk  %}" id="save" class="btn btn-danger">Proceed</a>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+
+  {% comment %} Places search area  {% endcomment %}
+  <script>
+        $( function() {
+
+          var result = [];
+
+          $("#route_address").on('keypress',function(){
+
+
+            var search = $('#route_address').val();
+            var token  = "pk.eyJ1Ijoia2V2b2pvcCIsImEiOiJjbDQ5azlsZW8wNmZ1M2hvNzcwcGpvMjNpIn0.UpQvTFXdpCC2JQvkM3ZYfw";
+            $.getJSON('https://api.mapbox.com/geocoding/v5/mapbox.places/'+search+'.json?country=in&proximity=ip&language=en&access_token='+token, function(json_data){
+              
+              //console.log(json_data,typeof(json_data));
+              for(var i=0; i<json_data.features.length; i++)
+              {
+                  //var listItem = document.createElement("LI");
+  
+                  //result = json_data.features[i].place_name;
+                  //result.push(json_data.features[i].place_name);
+                  //console.log(result,typeof(result));
+
+                  
+                  
+                  //console.log(json_data.features[i].place_name);
+
+                  //result.push(json_data.features[i].place_name) //list append
+
+                  result[i] = json_data.features[i].place_name; //dict
+                  
+                  
+                  //console.log(typeof(abc));
+                  
+                } 
+                
+                
+                
+            }); //end
+
+            //console.log(result,typeof(result),'result new')
+            
+          }); //onchange end
+          
+
+
+          $( "#route_address" ).autocomplete({
+            source: result
+              }); 
+         
+
+
+          }); // auto call function end
+  </script>
+
+
+  
+  
+{% endblock scripts %}
+
