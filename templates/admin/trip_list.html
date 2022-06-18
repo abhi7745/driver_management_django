@@ -59,7 +59,7 @@ Admin Dashboard
                         </th> -->
                         <th>Driver_Name</th>
                         <th>Guest_Name</th>
-                        <th>Address</th>
+                        <th>Reporting Address</th>
                         <th>Vehicle</th>
                         <th>Starting_date</th>
                         <th>Status</th>
@@ -82,7 +82,7 @@ Admin Dashboard
     
                         <td>{{x.driver_name}}</td>
                         <td>{{x.guest_name}}</td>
-                        <td>{{x.address}}</td>
+                        <td>{{x.reporting_address}}</td>
                         <td>{{x.vehicle}}</td>
                         <td>{{x.start_date}}</td>
                         <td>{{x.status}}</td>
@@ -326,12 +326,13 @@ Admin Dashboard
                         </th> -->
                         <th>Driver_Name</th>
                         <th>Guest_Name</th>
-                        <th>Address</th>
+                        <th>Reporting Address</th>
+                        <th>Releasing Address</th>
                         <th>Vehicle</th>
                         <th>End_date</th>
                         <th>End_time</th>
                         <th>End_KM</th>
-                        <th>Status</th>
+                        {% comment %} <th>Status</th> {% endcomment %}
                         {% comment %} <th>Total_KM</th> {% endcomment %}
                         <th>More</th>
                         
@@ -351,12 +352,13 @@ Admin Dashboard
     
                         <td>{{x.driver_name}}</td>
                         <td>{{x.guest_name}}</td>
-                        <td>{{x.address}}</td>
+                        <td>{{x.reporting_address}}</td>
+                        <td>{{x.releasing_address}}</td>
                         <td>{{x.vehicle}}</td>
                         <td>{{x.end_date}}</td>
                         <td>{{x.end_time}}</td>
                         <td>{{x.end_km}}</td>
-                        <td>ended</td>
+                        {% comment %} <td>ended</td> {% endcomment %}
               
 
                         <td><a href="{% url 'dutyslip' x.id %}" class="btn btn-sm btn-primary" style="width:70px;">Slip</a></td>

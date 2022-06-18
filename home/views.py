@@ -245,6 +245,7 @@ def add_trip(request):
 
         )
         print('New trip created')
+        return redirect('/')
 
     context={'already_tripExist':already_tripExist}
     return render(request,'driver/add_trip.html',context)
@@ -459,7 +460,7 @@ def trip_list(request):
             trip_details_pending=Trip_details.objects.filter(status='pending')
 
             # Trip_pending pagination-1
-            page_pending=Paginator(trip_details_pending, 5)
+            page_pending=Paginator(trip_details_pending, 10)
             page_list_pending=request.GET.get('page_pending')
             page_pending=page_pending.get_page(page_list_pending)
 
@@ -503,7 +504,7 @@ def trip_list(request):
             )
 
             # Trip_pending pagination-1
-            page_pending=Paginator(trip_details_pending, 5)
+            page_pending=Paginator(trip_details_pending, 10)
             page_list_pending=request.GET.get('page_pending')
             page_pending=page_pending.get_page(page_list_pending)
 
@@ -523,7 +524,7 @@ def trip_list(request):
             trip_details_ended=Trip_details.objects.filter(status='completed')
 
             # Trip_completed pagination-2
-            page_completed=Paginator(trip_details_ended, 1)
+            page_completed=Paginator(trip_details_ended, 10)
             page_list_completed=request.GET.get('page_completed')
             page_completed=page_completed.get_page(page_list_completed)
 
@@ -566,7 +567,7 @@ def trip_list(request):
             )
 
              # Trip_completed pagination-2
-            page_completed=Paginator(trip_details_ended, 1)
+            page_completed=Paginator(trip_details_ended, 10)
             page_list_completed=request.GET.get('page_completed')
             page_completed=page_completed.get_page(page_list_completed)
 
@@ -588,7 +589,7 @@ def trip_list(request):
         page_pending=page_pending.get_page(page_list_pending)
 
         # Trip_completed pagination-2
-        page_completed=Paginator(trip_details_ended, 1)
+        page_completed=Paginator(trip_details_ended, 5)
         page_list_completed=request.GET.get('page_completed')
         page_completed=page_completed.get_page(page_list_completed)
         

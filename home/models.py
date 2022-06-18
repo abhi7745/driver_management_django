@@ -33,7 +33,7 @@ class Trip_details(models.Model):
     booking_id=models.CharField(max_length=255,null=True,blank=True)
     driver_name=models.CharField(max_length=255)
     guest_name=models.CharField(max_length=255)
-    address=models.CharField(max_length=1024)
+    address=models.CharField(max_length=1024,null=True,blank=True)
     vehicle=models.CharField(max_length=255)
     vehicle_number=models.CharField(max_length=50)
     reporting_address=models.CharField(max_length=1024)
@@ -44,7 +44,7 @@ class Trip_details(models.Model):
     end_date=models.DateField(auto_now=False, auto_now_add=False,null=True,blank=True)
     end_time=models.TimeField(auto_now=False, auto_now_add=False,null=True,blank=True)
     end_km=models.IntegerField(null=True,blank=True)
-    remark=models.CharField(max_length=2048)
+    remark=models.CharField(max_length=2048,null=True,blank=True)
     # nextdayuse=models.CharField(max_length=2048)
     status=models.CharField(max_length=50,default='pending')
 
