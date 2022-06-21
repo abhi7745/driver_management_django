@@ -54,6 +54,7 @@ class Trip_details(models.Model):
     total_km=models.IntegerField(null=True,blank=True)
     driver_signature=models.FileField(upload_to='driver_signature', max_length=100)
     guest_signature=models.FileField(upload_to='guest_signature', max_length=100)
+    all_routes=models.CharField(max_length=3500)
 
 
     def __str__(self):
@@ -63,13 +64,13 @@ class Trip_details(models.Model):
 
 
 
-class route(models.Model):
-    driver_id=models.ForeignKey(Driver,on_delete=models.CASCADE)
-    trip_id=models.ForeignKey(Trip_details,on_delete=models.CASCADE)
-    route=models.CharField(max_length=1024)
+# class route(models.Model):
+#     driver_id=models.ForeignKey(Driver,on_delete=models.CASCADE)
+#     trip_id=models.ForeignKey(Trip_details,on_delete=models.CASCADE)
+#     route=models.CharField(max_length=1024)
 
-    def __str__(self):
-        return self.route
+#     def __str__(self):
+#         return self.route
 
 
 

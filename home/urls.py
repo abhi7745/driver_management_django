@@ -10,7 +10,10 @@ urlpatterns=[
 
     # driver area
     path("add_trip",views.add_trip,name="add_trip"),
-    path("add_route/<int:pk>",views.add_route,name="add_route"),
+
+    # path("api_location",  views.api_location, name="api_location"),
+
+    # path("add_route/<int:pk>",views.add_route,name="add_route"),
     # path("recent_triplist",views.recent_triplist,name="recent_triplist"),
     path("recent_trip/<int:pk>",views.recent_trip,name="recent_trip"),
 

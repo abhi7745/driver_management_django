@@ -59,14 +59,16 @@
             <div class="col">
                 <h5>Passenger : {{trip_details_db.guest_name|title}}</h5>
                 <h5>Date : {% now "d/m/Y" %}</h5>
-                <h5>Reporting date : {{trip_details_db.start_date}}</h5>
                 <h5>Reporting address : {{trip_details_db.reporting_address|title}}</h5>
+                <h5>Reporting date : {{trip_details_db.start_date}}</h5>
+                
             </div>
             <div class="col">
-                <h5>Booking id : {{trip_details_db.booking_id|title}}</h5>
-                <h5>Vehicle type : {{trip_details_db.vehicle|title}}</h5>
-                <h5>Vehicle Number: {{trip_details_db.vehicle_number|capfirst}}</h5>
                 <h5>Driver : {{trip_details_db.driver_name|title}}</h5>
+                <h5>Booking id : {{trip_details_db.booking_id|title}}</h5>
+                <h5>Releasing Address : </span>{{trip_details_db.releasing_address}}</h5>
+                <h5>Vehicle Number: {{trip_details_db.vehicle_number|capfirst}}</h5>
+                <h5>Vehicle type : {{trip_details_db.vehicle|title}}</h5>
                 {% comment %} <h5>Remarks:</h5> {% endcomment %}
             </div>
           </div>
@@ -78,7 +80,7 @@
             <th colspan="2">Start</th>
             <th colspan="2">End</th>
             <th colspan="2">Total</th>
-            <th rowspan="2">Signature</th>
+            <th rowspan="2">Driver Signature</th>
         </tr>
         <tr>
             <th>Kilometers</th>
@@ -162,22 +164,24 @@
             <th colspan="2"></th>
         </tr>
         <tr>
-            <td style="height: 45px;">Remarks : {{trip_details_db.remark}}</td>
+            <td style="height: 45px;"><span style="font-weight:bold;">Remarks :</span> {{trip_details_db.remark}}</td>
             <td style="text-align:center;">
+                <span style="font-weight:bold;">Guest Signature</span> <br>
                 <img src="{{trip_details_db.guest_signature.url}}" alt="signature" width="90px" height="50px">
             </td>
         </tr>
         <tr>
-            <td colspan="2" style="height: 45px;padding-left: 11px;">
-                <span style="font-weight:bold;">Reporting Address :</span> {{trip_details_db.reporting_address}} <br><br>
+            <td colspan="2" style="height: 45px;">
+                {% comment %} <span style="font-weight:bold;">Reporting Address :</span> {{trip_details_db.reporting_address}} <br><br> {% endcomment %}
                 
-                <span style="font-weight:bold;">Routes :-</span>
-                <ol>
+                <span style="font-weight:bold;">Route Address:-</span>
+                {{trip_details_db.all_routes}}
+                {% comment %} <ol>
                     {% for x in route_db %}
                     <li>{{x.route}}</li>
                     {% endfor %}
-                </ol>
-                <span style="font-weight:bold;">Releasing Address : </span>{{trip_details_db.releasing_address}}</td>
+                </ol> {% endcomment %}
+                {% comment %} <span style="font-weight:bold;">Releasing Address : </span>{{trip_details_db.releasing_address}}</td> {% endcomment %}
         </tr>
         {% comment %} <tr>
             <td colspan="2">Instruction for next day use:</td>

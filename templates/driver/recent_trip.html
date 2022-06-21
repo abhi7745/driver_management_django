@@ -8,6 +8,48 @@ Driver Dashboard
 {% include 'driver/sidebar.html' %}
 {% endblock %}
 
+{% block styles %}
+<style>
+  {% comment %} releasing_address styles {% endcomment %}
+      li.My_LI{
+          padding-top: 15px;
+          padding-bottom: 15px;
+          list-style: none;
+          font-size: 12px;
+          border-bottom: 1px solid gray;
+      }
+      ul#Releasing_list{
+          padding: 15px;
+          background-color: white;
+          border-radius: 10px;
+          box-shadow: 0px 0px 10px rgb(168, 167, 167);
+      }
+      #Releasing_list{
+        display: none;
+      }
+
+      {% comment %} add route styles {% endcomment %}
+
+      li.My_LI_Routes{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        list-style: none;
+        font-size: 12px;
+        border-bottom: 1px solid gray;
+        }
+        ul.search_list{
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgb(168, 167, 167);
+        }
+        .search_list{
+          display: none;
+        }
+
+</style>
+{% endblock %}
+
 
 {% block content %}
 
@@ -19,7 +61,7 @@ Driver Dashboard
             <form method="post" action="{% url 'recent_trip' pk %}" onsubmit="return validate()">
               {% csrf_token %}
                 <div class="card-header">
-                    <h4>Complete Trip -> Step-3</h4>
+                    <h4>Complete Trip -> Step-2</h4>
                 </div>
                 <div class="card-body">
 
@@ -70,6 +112,28 @@ Driver Dashboard
                           {{ unicorn.errors.company_name.0.message }}
                       </div>
                   </div> {% endcomment %}
+
+                  <div class="form-group mb-0">
+                    <label>Releasing Address</label>
+                    <input type="text" id="Releasing_search" name="releasing_address" class="Releasing_searchTerm form-control" value="" placeholder="search place" required="">
+                    {% comment %} <textarea  name="releasing_address" id="releasing_address" class="form-control releasing_address" required=""></textarea> {% endcomment %}
+                    <br>
+                    <ul style="list-style: none;" class="Releasing_search_list" id="Releasing_list" >
+                             
+                    </ul>
+                </div>
+
+                {% comment %} <div class="form-group mb-0">
+                    <label>Add Route Address</label>
+                    <input type="text" name="releasing_address" id="try2" class="form-control releasing_address" required="">
+                    <textarea  name="releasing_address" id="try2" class="form-control releasing_address" required=""></textarea>
+                    
+                </div> {% endcomment %}
+
+            
+               
+
+               
 
                   
 
@@ -143,13 +207,49 @@ Driver Dashboard
                       </div>
                   </div> {% endcomment %}
 
-                    <div class="form-group mb-0">
-                        <label>Releasing Address</label>
-                        <textarea  name="releasing_address" id="releasing_address" class="form-control" required=""></textarea>
-                        <div class="invalid-feedback">
-                            {{ unicorn.errors.address.0.message }}
-                        </div>
-                    </div>
+
+               
+                <!--main rote adder logic start-->
+                <div class="form-group">
+                  <label>Add Route Address</label>
+                  <div class="input-group mb-3 search">
+                    {% comment %} <input type="text" class="form-control" id="route_data" > {% endcomment %}
+
+ 
+                      <input type="text" id="search" class="searchTerm form-control" value="" placeholder="search place">
+                      {% comment %} <button type="submit" class="searchButton">
+                        <i class="fa fa-search"></i>
+                     </button> {% endcomment %}
+
+
+                   <div class="input-group-append">
+                      {% comment %} <button class="btn btn-primary" type="button">Button</button>  {% endcomment %}
+                      <span class="btn btn-primary" id="route_adder">Add</span>
+                    </div> 
+                  </div>
+                  <ul style="list-style: none;" class="search_list"id="list" >
+                             
+                  </ul>
+                  
+                  {% comment %} <div class="form-group">
+                    <select name="my_route_data" id="my_route_data" class="form-control" required="" multiple="multiple" >
+                      <!-- <option value="" selected disabled>Select</option> -->
+                    </select>
+                  </div> {% endcomment %}
+
+                  <div class="form-group" id="multiple_div"> 
+                    <select name="my_route" id="my_route" class="form-control" multiple="multiple" >
+                      <!-- <option value="" selected disabled>Select</option> -->
+                    </select>
+                  </div> 
+                  
+                </div>
+
+                <!--passing group data to django-->
+                 <!-- purpose of this- input field is for passing multiple route_list to views.py -->
+                 <input type="hidden" name="all_routes" id="my_route_list" class="form-control">
+
+                 <!--main rote adder logic start-->
 
                     <br>
                     <div class="form-group mb-0">
@@ -161,7 +261,7 @@ Driver Dashboard
                     <br>
                     <div class="form-group mb-0">
                         <label id="guest_sign">Guest Signature</label>
-                        <canvas id="signature-pad" class="signature-pad" width=400 height=300></canvas>
+                        <canvas id="signature-pad" class="signature-pad" style="width:100%" height=300></canvas>
                         <input type="hidden" id="signature" name="guest_signature">
                     </div>
 
@@ -178,7 +278,7 @@ Driver Dashboard
                 <div class="card-footer text-right">
                     {% comment %} <button class="btn btn-primary">Save</button> {% endcomment %}
                     
-                    <a href="#signature-pad" id="clear-signature" class="btn btn-secondary">Clear</a>
+                    <a href="javascript:void(0);" id="clear-signature" class="btn btn-secondary">Clear</a>
                     <a href="{{request.META.HTTP_REFERER}}" id="" class="btn btn-info">back</a>
                     <button id="save" class="btn btn-danger ">End Trip</button>
                 </div>
@@ -362,12 +462,12 @@ Driver Dashboard
 
 
     
-    </script>
+  </script>
 
 
 
 
-  {% comment %} Places search area  {% endcomment %}
+  {% comment %} Places search area  old{% endcomment %}
   <script>
     $( function() {
 
@@ -417,6 +517,61 @@ Driver Dashboard
           }); 
      
 
+      }); // auto call function end
+  </script>
+
+
+
+  {% comment %} multiple Place selector old{% endcomment %}
+  <script>
+    $( function() {
+
+      var result = [];
+
+      $("#route_data").on('keypress',function(){
+
+
+        var search = $('#route_data').val();
+        var token  = "pk.eyJ1Ijoia2V2b2pvcCIsImEiOiJjbDQ5azlsZW8wNmZ1M2hvNzcwcGpvMjNpIn0.UpQvTFXdpCC2JQvkM3ZYfw";
+        $.getJSON('https://api.mapbox.com/geocoding/v5/mapbox.places/'+search+'.json?country=in&proximity=ip&language=en&access_token='+token, function(json_data){
+          
+          //console.log(json_data,typeof(json_data));
+          for(var i=0; i<json_data.features.length; i++)
+          {
+              //var listItem = document.createElement("LI");
+
+              //result = json_data.features[i].place_name;
+              //result.push(json_data.features[i].place_name);
+              //console.log(result,typeof(result));
+
+              
+              
+              //console.log(json_data.features[i].place_name);
+
+              //result.push(json_data.features[i].place_name) //list append
+
+              result[i] = json_data.features[i].place_name; //dict
+              
+              
+              //console.log(typeof(abc));
+              
+            } 
+            
+            
+            
+        }); //end
+
+        //console.log(result,typeof(result),'result new')
+        
+      }); //onchange end
+      
+
+
+      $( "#route_data" ).autocomplete({
+        source: result
+          }); 
+     
+
 
       }); // auto call function end
   </script>
@@ -427,14 +582,25 @@ Driver Dashboard
 <script>
   function validate() {
 
+   var total_time_valid = document.getElementById('total_time').value;
    var valid = document.getElementById('signature').value == '';
+   var my_route_valid = document.getElementById('my_route').value;
    console.log(valid);
-   if(valid != '' ){
+
+   if(total_time_valid =='' ){
+      alert('Please add valid End Date and End Time');
+      return false;
+   }
+   else if(valid != '' ){
      //alert('Please Fill Signature');
 
      document.getElementById("guest_sign").style.color = "red";
      return false;
    
+   }
+   else if(my_route_valid == '' ){
+      alert('Please add valid routes');
+      return false;
    }
    else{
      //alert('validation successfull new');
@@ -450,8 +616,241 @@ Driver Dashboard
 
 </script>
 
+<!-- select2 cdn library -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- select2 cdn library -->
 
+<script>
+
+  $(document).ready(function(){
+
+    // select2 library
+    $('#my_route').select2({
+      // placeholder: 'Select Technologies',
+      //closeOnSelect: false,
+      theme: 'classic',
+    });
+
+    
+    $('#multiple_div').hide();
+
+
+  });
+
+
+
+  $("#my_route").on('change',function(){
   
+    var route_list="";
+
+      $('#my_route option:selected').each(function(){
+              route_list += $(this).text()+"-"
+              // tech_name += $('#my_tech option:selected').text()+",";
+          })
+      
+      route_list=route_list.substring(0,route_list.length-1) //removing last comma
+
+      $('#my_route_list').val(route_list);
+      
+
+   
+            
+            
+  });
+
+  {% comment %} $("#releasing_address").on('change',function(){
+
+    alert('try');
+  
+    var search = $('#releasing_address').val();
+    var route_list="";
+
+      
+      route_list += search+"-"
+      
+      //route_list=route_list.substring(0,route_list.length-1) //removing last comma
+
+      $('#my_route_list').val(route_list);
+      
+
+   
+            
+            
+    }); {% endcomment %}
+
+      $("#route_adder").on('click', function(){
+        //alert($(this).val());
+
+        $('#multiple_div').show();
+        //var select = document.getElementById("my_route");
+
+        if ($('#search').val() != '' ){
+            var search = $('#search').val();
+            var slots_list = "";
+
+            $('#my_route').append("<option value='"+search+"' selected>"+search+"</option>");
+            
+            $('#search').each(function(){
+
+                if($(this).val() ) {
+                slots_list += $(this).val()+"-"
+                }
+                // else{
+                //     alert('null')
+                // }
+            });
+
+            //alert(slots_list,'hai');
+            
+            slots_list=slots_list.substring(0,slots_list.length-1) //removing last comma
+
+            //$('#try2').val(slots_list);
+            //$('#my_route_list').val(slots_list);
+            $('#search').val('');
+
+            //$('#my_route').append("<option value='"+slots_list+"' selected>"+slots_list+"</option>");
+
+
+            var route_list="";
+
+            $('#my_route option:selected').each(function(){
+                    route_list += $(this).text()+"-"
+                    // tech_name += $('#my_tech option:selected').text()+",";
+                })
+            
+            route_list=route_list.substring(0,route_list.length-1) //removing last comma
+
+            $('#my_route_list').val(route_list);
+
+        }
+        else{
+          alert('Please enter valid route');
+        }
+        
+
+
+      });
+
+</script>
+
+
+{% comment %} for Releasing address {% endcomment %}
+<script>
+  //setup before functions
+  var Releasing_typingTimer;                //timer identifier
+  var Releasing_doneTypingInterval = 1000;  //time in ms (1 seconds)
+ 
+
+  //on keyup, start the countdown
+  $('#Releasing_search').keyup(function(){
+      clearTimeout(Releasing_typingTimer);
+      if ($('#Releasing_search').val()) {
+          Releasing_typingTimer = setTimeout(Releasing_doneTyping, Releasing_doneTypingInterval);
+      }
+  });
+  var Releasing_list = document.getElementById("Releasing_list");
+  function Releasing_doneTyping () {
+      var Releasing_search = $('#Releasing_search').val();
+      var Releasing_token  = "pk.eyJ1Ijoia2V2b2pvcCIsImEiOiJjbDQ5azlsZW8wNmZ1M2hvNzcwcGpvMjNpIn0.UpQvTFXdpCC2JQvkM3ZYfw"; //mapbox token
+      $.getJSON('https://api.mapbox.com/geocoding/v5/mapbox.places/'+Releasing_search+'.json?country=in&proximity=ip&language=en&access_token='+Releasing_token, function(Releasing_json_data){
+        Releasing_list.innerHTML = "";
+     for(var i=0; i<Releasing_json_data.features.length; i++)
+      {
+          var Releasing_listItem = document.createElement("LI");
+
+          Releasing_listItem.className = "My_LI";
+
+          Releasing_listItem.textContent = Releasing_json_data.features[i].place_name;
+
+          Releasing_list.appendChild(Releasing_listItem);
+          Releasing_listItem.addEventListener("click", function(){
+              event.preventDefault();
+              //send listitem to input
+              $('#Releasing_search').val(this.textContent);
+             
+              {% comment %} $.ajax({
+                  url: "",
+                  type: "POST",
+                  data: Releasing_listItem.content,
+                  success: function(data){
+                      alert("data");
+                      Releasing_list.innerHTML = "";
+
+                  }
+              }); {% endcomment %}
+          });
+      } 
+      //clear the list
+      //
+      $('.Releasing_search_list').slideDown();
+      $('.Releasing_search_list').mouseleave(function(){
+          $('.Releasing_search_list').slideUp();
+      });
+      });
+      
+
+  }
+</script>
+
+
+{% comment %} for add route address {% endcomment %}
+<script>
+  //setup before functions
+  var typingTimer;                //timer identifier
+  var doneTypingInterval = 1000;  //time in ms (1 seconds)
+ 
+
+  //on keyup, start the countdown
+  $('#search').keyup(function(){
+      clearTimeout(typingTimer);
+      if ($('#search').val()) {
+          typingTimer = setTimeout(doneTyping, doneTypingInterval);
+      }
+  });
+  var list = document.getElementById("list");
+  function doneTyping () {
+      var search = $('#search').val();
+      var token  = "pk.eyJ1Ijoia2V2b2pvcCIsImEiOiJjbDQ5azlsZW8wNmZ1M2hvNzcwcGpvMjNpIn0.UpQvTFXdpCC2JQvkM3ZYfw"; //mapbox token
+      $.getJSON('https://api.mapbox.com/geocoding/v5/mapbox.places/'+search+'.json?country=in&proximity=ip&language=en&access_token='+token, function(json_data){
+      list.innerHTML = "";
+     for(var i=0; i<json_data.features.length; i++)
+      {
+          var listItem = document.createElement("LI");
+
+          listItem.className = "My_LI_Routes";
+
+          listItem.textContent = json_data.features[i].place_name;
+
+          list.appendChild(listItem);
+          listItem.addEventListener("click", function(){
+              event.preventDefault();
+              //send listitem to input
+              $('#search').val(this.textContent);
+             
+              {% comment %} $.ajax({
+                  url: "",
+                  type: "POST",
+                  data: listItem.content,
+                  success: function(data){
+                      alert("data");
+                      list.innerHTML = "";
+
+                  }
+              }); {% endcomment %}
+          });
+      } 
+      //clear the list
+      //
+      $('.search_list').slideDown();
+      $('.search_list').mouseleave(function(){
+          $('.search_list').slideUp();
+      });
+      });
+      
+
+  }
+</script>
 
 
 {% endblock scripts %}

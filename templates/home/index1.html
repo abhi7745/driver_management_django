@@ -1,0 +1,59 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Slide Navbar</title>
+	<link rel="stylesheet" type="text/css" href=" {% static 'home/css/style.css' %}">
+	<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+	<!-- Just an image -->
+	
+	<div class="row">
+	<div class="main">  	
+		
+		<input type="checkbox" id="chk" aria-hidden="true">
+
+			<div class="signup">
+				<form action="{% url 'signup' %}" method="post">
+					{% csrf_token %}
+					<label for="chk" aria-hidden="true">Sign up</label>
+					<input autofocus type="text" name="name" placeholder="Name" required="" value="{{static_name}}">
+                    
+					<select id="user" name="role">
+					{% comment %} <option value="admin">Admin</option>
+					<option value="customer">Customer</option> {% endcomment %}
+					<option value="driver">Driver</option>					
+					</select>
+					<input type="email" name="email" placeholder="Email" required="" value="{{static_mail}}">
+					<input type="password" name="pswd1" placeholder="Password" required="">
+                    <input type="password" name="pswd2" placeholder="Confirm password" required="">
+					<a href="#" style="text-decoration: none;">
+					<button type="submit">Sign up</button></a>
+				</form>
+			</div>
+
+			<div class="login">
+				<form action="{% url 'login' %}" method="post">
+					{%csrf_token%}
+					<label for="chk" aria-hidden="true">Login</label>
+					<input type="email" name="email" placeholder="Email" required="">
+					<input type="password" name="pswd" placeholder="Password" required="">
+					<a href="driver.html" style="text-decoration: none;">
+					<button type="submit">Login</button></a>
+				</form>
+			</div>
+	</div>
+</div>
+
+<script>
+	{% if user_error %}
+		alert('{{user_error}}')
+	{% elif reg_success %}
+		alert('{{reg_success}}')
+	{% endif %}
+	
+</script>
+</body>
+</html>

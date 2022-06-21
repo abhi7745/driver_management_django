@@ -1,59 +1,57 @@
-
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Slide Navbar</title>
-	<link rel="stylesheet" type="text/css" href=" {% static 'home/css/style.css' %}">
-	<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'home/main.css' %}">
 </head>
 <body>
-	<!-- Just an image -->
-	
-	<div class="row">
-	<div class="main">  	
-		
-		<input type="checkbox" id="chk" aria-hidden="true">
+    <div class="form-modal">
+    
+        <div class="form-toggle">
+            <button id="login-toggle" onclick="toggleLogin()">log in</button>
+            <button id="signup-toggle" onclick="toggleSignup()">sign up</button>
+        </div>
+    
+        <div id="login-form">
+            <form action="{% url 'login' %}" method="post">
+                {%csrf_token%}
+                <input type="email" name="email" placeholder="Enter email" value="{{static_mail}}" required="" />
+                <input type="password" name="pswd" placeholder="Enter password" required="" />
+                <button type="submit" class="btn login">login</button>
+                {% comment %} <p><a href="javascript:void(0)">Forgotten account</a></p> {% endcomment %}
+                <hr/>
+    
+            </form>
+        </div>
+    
+        <div id="signup-form">
+            <form action="{% url 'signup' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Choose username" value="{{static_name}}"  required="" />
+                <input type="email" name="email" placeholder="Enter your email" value="{{static_mail}}" required="" />
+                <input type="password" name="pswd1" placeholder="Password" required="" />
+                <input type="password" name="pswd2" placeholder="Confirm password" required="" />
+                <button type="submit" name="" class="btn signup">create account</button>
+                <!-- <p>Clicking <strong>create account</strong> means that you are agree to our <a href="javascript:void(0)">terms of services</a>.</p> -->
+                <hr/>
+               
+            </form>
+        </div>
+    
+    </div>
+    <script src="{% static 'home/script.js' %}"></script>
 
-			<div class="signup">
-				<form action="{% url 'signup' %}" method="post">
-					{% csrf_token %}
-					<label for="chk" aria-hidden="true">Sign up</label>
-					<input autofocus type="text" name="name" placeholder="Name" required="" value="{{static_name}}">
-                    
-					<select id="user" name="role">
-					{% comment %} <option value="admin">Admin</option>
-					<option value="customer">Customer</option> {% endcomment %}
-					<option value="driver">Driver</option>					
-					</select>
-					<input type="email" name="email" placeholder="Email" required="" value="{{static_mail}}">
-					<input type="password" name="pswd1" placeholder="Password" required="">
-                    <input type="password" name="pswd2" placeholder="Confirm password" required="">
-					<a href="#" style="text-decoration: none;">
-					<button type="submit">Sign up</button></a>
-				</form>
-			</div>
-
-			<div class="login">
-				<form action="{% url 'login' %}" method="post">
-					{%csrf_token%}
-					<label for="chk" aria-hidden="true">Login</label>
-					<input type="email" name="email" placeholder="Email" required="">
-					<input type="password" name="pswd" placeholder="Password" required="">
-					<a href="driver.html" style="text-decoration: none;">
-					<button type="submit">Login</button></a>
-				</form>
-			</div>
-	</div>
-</div>
-
-<script>
-	{% if user_error %}
-		alert('{{user_error}}')
-	{% elif reg_success %}
-		alert('{{reg_success}}')
-	{% endif %}
-	
-</script>
+    <script>
+        {% if user_error %}
+            alert('{{user_error}}')
+        {% elif reg_success %}
+            alert('{{reg_success}}')
+        {% endif %}
+        
+    </script>
 </body>
 </html>

@@ -8,13 +8,36 @@ Driver Dashboard
 {% include 'driver/sidebar.html' %}
 {% endblock %}
 
+{% block styles %}
+<style>
+  {% comment %} add route styles {% endcomment %}
+
+  li.My_LI_Routes{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    list-style: none;
+    font-size: 12px;
+    border-bottom: 1px solid gray;
+    }
+    ul.search_list{
+        padding: 15px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgb(168, 167, 167);
+    }
+    .search_list{
+      display: none;
+    }
+</style>
+{% endblock %}
+
 
 {% block content %}
 
 <section class="section">
 
 
-        {% if not already_tripExist == 1 %}
+        {% comment %} {% if not already_tripExist == 1 %} {% endcomment %}
           <div class="row justify-content-center">
             <div class="col-12 col-md-6 col-lg-6">
                 <div class="card">
@@ -32,7 +55,7 @@ Driver Dashboard
                                 {{ unicorn.errors.company_name.0.message }}
                           </div>
 
-
+                            <br>
                             <div class="form-group">
                                 <label>Driver Name</label>
                                 {% comment %} <div class="form-control border-0">abhi</div> {% endcomment %}
@@ -58,10 +81,12 @@ Driver Dashboard
 
                             <div class="form-group mb-0">
                               <label>Reporting Address</label>
-                              <textarea  name="reporting_address" id="reporting_address" class="form-control " required=""></textarea>
-                              <div class="invalid-feedback">
-                                  {{ unicorn.errors.address.0.message }}
-                              </div>
+                              <input type="text" id="search" class="form-control searchTerm" name="reporting_address" value="" placeholder="search place" required="">
+                              {% comment %} <textarea  name="reporting_address" id="reporting_address" class="form-control " required=""></textarea> {% endcomment %}
+                              <br>
+                              <ul style="list-style: none;" class="search_list"id="list" >
+                             
+                              </ul>
                             </div>
 
                           <br>
@@ -91,10 +116,13 @@ Driver Dashboard
                               <label>Choose Vehicle</label>
                               <select name="vehicle" id="" required class="form-control">
                                 <option value="" selected disabled>--Select--</option>
-                                <option value="innova">Innova</option>
-                                <option value="traveller">Traveller</option>
-                                <option value="duster">Duster</option>
-                                <option value="bus">bus</option>
+                                <option value="Sedan">Sedan</option>
+                                <option value="Ertiga SUV">Ertiga SUV</option>
+                                <option value="Innova SUV">Innova SUV</option>
+                                <option value="Premium SUV Crysta">Premium SUV Crysta</option>
+                                <option value="Traveller">Traveller</option>
+                                {% comment %} <option value="duster">Duster</option> {% endcomment %}
+                                <option value="Bus">Bus</option>
                               </select>
                           </div>
                             
@@ -123,7 +151,7 @@ Driver Dashboard
                             <br>
                             <div class="form-group mb-0">
                                 <label id="driver_sign">Driver Signature</label>
-                                <canvas id="signature-pad" class="signature-pad" width=400 height=300 required></canvas>
+                                <canvas id="signature-pad" class="signature-pad" style="width:100%" height=300 required></canvas>
                                 <input type="hidden" id="signature" name="driver_signature">
                             </div>
 
@@ -140,18 +168,18 @@ Driver Dashboard
                         <div class="card-footer text-right">
                             {% comment %} <button class="btn btn-primary">Save</button> {% endcomment %}
                             
-                            <a href="#signature-pad" id="clear-signature" class="btn btn-secondary btn-sm">Clear</a>
-                            <button id="save" class="btn btn-primary btn-sm">Add Trip</button>
+                            <a href="javascript:void(0);" id="clear-signature" class="btn btn-secondary">Clear</a>
+                            <button id="save" class="btn btn-primary ">Add Trip</button>
                         </div>
                     </form>
                 </div>
             </div>
           </div>
 
-          {% else %}
+          {% comment %} {% else %} {% endcomment %}
 
           <!--driver on a trip condition-->
-          <div class="row justify-content-center">
+          {% comment %} <div class="row justify-content-center">
             <div class="col-12 col-md-6 col-lg-6">
           <div class="row justify-content-center" >
             <div class="card" >
@@ -168,15 +196,15 @@ Driver Dashboard
                     <p class="lead">
                       Sorry you can't add any trip details, you are on a trip.
                     </p>
-                    <a href="{% url 'add_route' trip_details_db.id %}" class="btn btn-primary mt-4">Go to Recent Trip</a>
+                    <a href="{% url 'recent_trip' trip_details_db.id %}" class="btn btn-primary mt-4">Go to Recent Trip</a>
                     <a href="#" class="mt-4 bb">Need Help?</a>
                   </div>
                  
                 </div>
             </div>
-          </div>
+          </div> {% endcomment %}
 
-          {% endif %}
+          {% comment %} {% endif %} {% endcomment %}
     
           
           
@@ -308,6 +336,65 @@ Driver Dashboard
         document.getElementById("driver_sign").style.color = "black";
       });
 
+  </script>
+
+
+  {% comment %} for Reporting address {% endcomment %}
+  <script>
+    //setup before functions
+    var typingTimer;                //timer identifier
+    var doneTypingInterval = 1000;  //time in ms (1 seconds)
+   
+  
+    //on keyup, start the countdown
+    $('#search').keyup(function(){
+        clearTimeout(typingTimer);
+        if ($('#search').val()) {
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        }
+    });
+    var list = document.getElementById("list");
+    function doneTyping () {
+        var search = $('#search').val();
+        var token  = "pk.eyJ1Ijoia2V2b2pvcCIsImEiOiJjbDQ5azlsZW8wNmZ1M2hvNzcwcGpvMjNpIn0.UpQvTFXdpCC2JQvkM3ZYfw"; //mapbox token
+        $.getJSON('https://api.mapbox.com/geocoding/v5/mapbox.places/'+search+'.json?country=in&proximity=ip&language=en&access_token='+token, function(json_data){
+        list.innerHTML = "";
+       for(var i=0; i<json_data.features.length; i++)
+        {
+            var listItem = document.createElement("LI");
+
+            listItem.className = "My_LI_Routes";
+  
+            listItem.textContent = json_data.features[i].place_name;
+  
+            list.appendChild(listItem);
+            listItem.addEventListener("click", function(){
+                event.preventDefault();
+                //send listitem to input
+                $('#search').val(this.textContent);
+               
+                {% comment %} $.ajax({
+                    url: "",
+                    type: "POST",
+                    data: listItem.content,
+                    success: function(data){
+                        alert("data");
+                        list.innerHTML = "";
+  
+                    }
+                }); {% endcomment %}
+            });
+        } 
+        //clear the list
+        //
+        $('.search_list').slideDown();
+        $('.search_list').mouseleave(function(){
+            $('.search_list').slideUp();
+        });
+        });
+        
+  
+    }
   </script>
 
   

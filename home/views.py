@@ -17,6 +17,10 @@ from django.core.paginator import Paginator # pagination purpose
 
 from django.db.models import Q # this is for multiple queryset conditions
 
+from django.http import JsonResponse
+
+import requests
+
 # Create your views here.
 
 
@@ -99,7 +103,7 @@ def signup(request):
                 User_db=User.objects.create(
                     username=email,
                     password=passEncrypted,
-                    role=role,
+                    role='driver',
                 )
 
                 Driver.objects.create(
@@ -109,7 +113,7 @@ def signup(request):
                 )
                 print('User_db and Driver_db Created')
 
-                return render(request,'home/index.html',{'reg_success': 'Successfully registered, Please login'})
+                return render(request,'home/index.html',{'reg_success': 'Successfully registered, Please login','static_mail':email})
             
 
 
@@ -168,7 +172,7 @@ def loginpage(request):
                 else:
                     print(user,'user')
                     print('login failed')
-                    context={'static_mail':email,'user_error':'Invalid Email & Password'}
+                    context={'static_mail':email,'user_error':'Invalid Email and Password'}
                     return render(request,'home/index.html',context)
 
         
@@ -193,16 +197,18 @@ from django.core.files.base import ContentFile
 @role_required_decorator(allowed_roles=['driver'])
 def add_trip(request):
 
-    already_tripExist=Trip_details.objects.filter(driver_id=request.user.id,status='pending').count()
-    print(already_tripExist)
+    # already_tripExist=Trip_details.objects.filter(driver_id=request.user.id,status='pending').count()
+    # print(already_tripExist)
 
     if Trip_details.objects.filter(driver_id=request.user.id,status='pending').exists():
         trip_details_db=Trip_details.objects.get(driver_id=request.user.id,status='pending')
 
         print('Trip_exist')
 
-        context={'already_tripExist':already_tripExist,'trip_details_db':trip_details_db}
-        return render(request,'driver/add_trip.html',context)
+        # context={'already_tripExist':already_tripExist,'trip_details_db':trip_details_db}
+        context={'trip_details_db':trip_details_db}
+        # return render(request,'driver/add_trip.html',context)
+        return redirect('recent_trip/'+str(trip_details_db.id))
     
     elif request.method == 'POST':
         booking_id = request.POST.get('booking_id')
@@ -247,39 +253,41 @@ def add_trip(request):
         print('New trip created')
         return redirect('/')
 
-    context={'already_tripExist':already_tripExist}
+    # context={'already_tripExist':already_tripExist}
+    context={}
+    print('main-add_trip')
     return render(request,'driver/add_trip.html',context)
 
 # add_trip sub view
-@login_required(login_url="signup")
-@role_required_decorator(allowed_roles=['driver'])
-def add_route(request,pk):
+# @login_required(login_url="signup")
+# @role_required_decorator(allowed_roles=['driver'])
+# def add_route(request,pk):
 
-    route_db=route.objects.filter(driver_id=request.user.id,trip_id=pk)
+#     route_db=route.objects.filter(driver_id=request.user.id,trip_id=pk)
 
-    if request.method == 'POST':
-        route_address = request.POST.get('route_address')
+#     if request.method == 'POST':
+#         route_address = request.POST.get('route_address')
 
-        print(route_address)
+#         print(route_address)
 
-        if route.objects.filter(driver_id=request.user.id,trip_id=pk,route__contains=route_address).exists():
-            print('Route location already exist')
-            context={'route_db':route_db,'pk':pk,'alreadyExist':'Route location already exist'}
-            return render(request,'driver/add_route.html',context)
+#         if route.objects.filter(driver_id=request.user.id,trip_id=pk,route__contains=route_address).exists():
+#             print('Route location already exist')
+#             context={'route_db':route_db,'pk':pk,'alreadyExist':'Route location already exist'}
+#             return render(request,'driver/add_route.html',context)
 
-        else:
-            route.objects.create(
-                driver_id=request.user.driver,
-                trip_id=Trip_details.objects.get(id=pk),
-                route=route_address
-            )
-            print('route saved')
+#         else:
+#             route.objects.create(
+#                 driver_id=request.user.driver,
+#                 trip_id=Trip_details.objects.get(id=pk),
+#                 route=route_address
+#             )
+#             print('route saved')
 
     
    
 
-    context={'route_db':route_db,'pk':pk}
-    return render(request,'driver/add_route.html',context)
+#     context={'route_db':route_db,'pk':pk}
+#     return render(request,'driver/add_route.html',context)
 
 
 # @login_required(login_url="signup")
@@ -336,6 +344,7 @@ def recent_trip(request,pk):
             releasing_address = request.POST.get('releasing_address')
             remark = request.POST.get('remark')
             guest_signature = request.POST.get('guest_signature')
+            all_routes = request.POST.get('all_routes')
 
             print(total_time,'???????????????????????? total_time ??????????????????????')
 
@@ -406,6 +415,7 @@ def recent_trip(request,pk):
             trip_details_db.total_days=total_days
             trip_details_db.total_km=total_km
             trip_details_db.status='completed'
+            trip_details_db.all_routes=all_routes
             trip_details_db.save()
             print('trip_details_db updated')
             return redirect('/')
@@ -604,9 +614,9 @@ def dutyslip(request,pk):
     if Trip_details.objects.filter(id=pk,status='completed').exists():
         trip_details_db=Trip_details.objects.get(id=pk,status='completed')
 
-        route_db=route.objects.filter(trip_id=pk)
+        # route_db=route.objects.filter(trip_id=pk)
 
-        context={'trip_details_db':trip_details_db,'route_db':route_db}
+        context={'trip_details_db':trip_details_db}
         return render(request,'admin/dutyslip.html',context)
 
     else:
