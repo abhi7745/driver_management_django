@@ -15,6 +15,7 @@ Admin Dashboard
     
   <div class="row ">
       <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <a href="{% url 'driver_list' %}" style="text-decoration: none; {% if driver_count == 0 %} pointer-events: none {% endif %}">
           <div class="card card-info">
             <div class="card-statistic-4">
   
@@ -24,8 +25,11 @@ Admin Dashboard
   
             </div>
           </div>
+        </a>
         </div>
+
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <a href="{% url 'trip_list' %}" style="text-decoration: none;">
           <div class="card card-info">
             <div class="card-statistic-4">
   
@@ -35,8 +39,11 @@ Admin Dashboard
   
             </div>
           </div>
+          </a>
         </div>
+
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <a href="{% url 'trip_list' %}" style="text-decoration: none;">
           <div class="card card-info">
             <div class="card-statistic-4">
   
@@ -46,8 +53,10 @@ Admin Dashboard
   
             </div>
           </div>
+          </a>
         </div>
-    </div>
+    
+  </div>
 
 </section>
 {% endblock %}

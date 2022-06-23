@@ -19,7 +19,6 @@ from django.db.models import Q # this is for multiple queryset conditions
 
 from django.http import JsonResponse
 
-import requests
 
 # Create your views here.
 
