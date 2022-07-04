@@ -50,7 +50,15 @@ Driver Dashboard
 
                           <div class="form-group">
                             <label>Booking Id</label>
-                            <input  id="name" name="booking_id" type="Number" min="1" class="form-control">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                  <i class="fas fa-id-badge"></i>
+                                </div>
+                              </div>
+                              
+                              <input  id="name" name="booking_id" type="Number" min="1" class="form-control">
+                            </div>
                             <div class="invalid-feedback">
                                 {{ unicorn.errors.company_name.0.message }}
                           </div>
@@ -58,13 +66,29 @@ Driver Dashboard
                             <br>
                             <div class="form-group">
                                 <label>Driver Name</label>
-                                {% comment %} <div class="form-control border-0">abhi</div> {% endcomment %}
-                                <input  id="" name="driver_name" value="{{request.user.driver.name}}" readonly type="text" class="form-control">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                      <i class="fas fa-taxi"></i>
+                                    </div>
+                                  </div>
+                                 
+                                  {% comment %} <div class="form-control border-0">abhi</div> {% endcomment %}
+                                  <input  id="" name="driver_name" value="{{request.user.driver.name}}" readonly type="text" class="form-control">
+                                </div>
                             </div> 
                             
                             <div class="form-group">
                                 <label>Guest Name</label>
-                                <input  id="" name="guest_name" type="text" class="form-control" required="">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                      <i class="fas fa-user-plus"></i>
+                                    </div>
+                                  </div>
+                                 
+                                  <input  id="" name="guest_name" type="text" class="form-control" required="">
+                                </div>
                                 <div class="invalid-feedback">
                                     {{ unicorn.errors.company_name.0.message }}
                                   </div>
@@ -81,8 +105,16 @@ Driver Dashboard
 
                             <div class="form-group mb-0">
                               <label>Reporting Address</label>
-                              <input type="text" id="search" class="form-control searchTerm" name="reporting_address" value="" placeholder="search place" required="">
-                              {% comment %} <textarea  name="reporting_address" id="reporting_address" class="form-control " required=""></textarea> {% endcomment %}
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                  </div>
+                                </div>
+                                
+                                <input type="text" id="search" class="form-control searchTerm" name="reporting_address" value="" placeholder="search place" required="">
+                                {% comment %} <textarea  name="reporting_address" id="reporting_address" class="form-control " required=""></textarea> {% endcomment %}
+                              </div>
                               <br>
                               <ul style="list-style: none;" class="search_list"id="list" >
                              
@@ -92,21 +124,45 @@ Driver Dashboard
                           <br>
                           <div class="form-group">
                               <label>Enter Start Date</label>
-                              <input  id="" name="start_date" type="date" class="form-control" required="">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">
+                                    <i class="fas fa-calendar"></i>
+                                  </div>
+                                </div>
+                                
+                                <input  id="" name="start_date" type="date" class="form-control" required="">
+                              </div>
                               <div class="invalid-feedback">
                                   {{ unicorn.errors.company_name.0.message }}
                               </div>
                           </div>
                           <div class="form-group">
                               <label>Enter Start time</label>
-                              <input  id="" name="start_time" type="time" class="form-control" required="">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">
+                                    <i class="fas fa-clock"></i>
+                                  </div>
+                                </div>
+                               
+                                <input  id="" name="start_time" type="time" class="form-control" required="">
+                              </div>
                               <div class="invalid-feedback">
                                   {{ unicorn.errors.company_name.0.message }}
                               </div>
                           </div>
                           <div class="form-group">
                               <label>Enter Start Kilometer</label>
-                              <input  id="" name="start_km" type="number" min="1" class="form-control" required="">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                  </div>
+                                </div>
+                               
+                                <input  id="" name="start_km" type="number" min="1" class="form-control" required="">
+                              </div>
                               <div class="invalid-feedback">
                                   {{ unicorn.errors.company_name.0.message }}
                               </div>
@@ -114,6 +170,14 @@ Driver Dashboard
 
                           <div class="form-group">
                               <label>Choose Vehicle</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">
+                                    <i class="fas fa-car-side"></i>
+                                  </div>
+                                </div>
+                               
+                              
                               <select name="vehicle" id="" required class="form-control">
                                 <option value="" selected disabled>--Select--</option>
                                 <option value="Sedan">Sedan</option>
@@ -124,6 +188,8 @@ Driver Dashboard
                                 {% comment %} <option value="duster">Duster</option> {% endcomment %}
                                 <option value="Bus">Bus</option>
                               </select>
+                            </div>
+
                           </div>
                             
                             {% comment %} <div class="form-group">
@@ -141,7 +207,15 @@ Driver Dashboard
 
                             <div class="form-group">
                               <label>Vehicle Number</label>
-                              <input  id="" name="vehicle_number" type="text" min="1" class="form-control" required="">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">
+                                    <i class="fas fa-address-card"></i>
+                                  </div>
+                                </div>
+                                
+                                <input  id="" name="vehicle_number" type="text" min="1" class="form-control" required="">
+                              </div>
                               <div class="invalid-feedback">
                                   {{ unicorn.errors.company_name.0.message }}
                               </div>
@@ -169,7 +243,7 @@ Driver Dashboard
                             {% comment %} <button class="btn btn-primary">Save</button> {% endcomment %}
                             
                             <a href="javascript:void(0);" id="clear-signature" class="btn btn-secondary">Clear</a>
-                            <button id="save" class="btn btn-primary ">Add Trip</button>
+                            <button id="save" class="btn btn-primary ">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -397,6 +471,31 @@ Driver Dashboard
     }
   </script>
 
+
+  {% comment %} <script>
+    {% if messages %}
+
+    {% for message in messages %}
+    alert('{{message}}')
+    {%  endfor %}
+
+    {% endif %}
+  </script> {% endcomment %}
   
+
+  {% comment %} https://sweetalert.js.org/docs/ {% endcomment %}
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+
+    {% if messages %}
+
+    {% for message in messages %}
+
+    swal("Good job!", "{{message}}", "success");
+
+    {%  endfor %}
+
+    {% endif %}
+  </script>
   
 {% endblock scripts %}

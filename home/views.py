@@ -19,6 +19,8 @@ from django.db.models import Q # this is for multiple queryset conditions
 
 from django.http import JsonResponse
 
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -77,22 +79,22 @@ def signup(request):
             if(name=='' or email== '' or pswd1=='' or pswd2==''):
                 print('No value')
                 context={'static_name':name,'static_mail':email,'user_error':'Please enter valid info...'}
-                return render(request,'home/index.html',context)
+                return render(request,'home/login_signup.html',context)
 
             elif(len(pswd1)<6):
                 print('Password length too short.')
                 context={'static_name':name,'static_mail':email,'user_error':'Password length is too short. Require a minimum password length of 6–10 characters.'}
-                return render(request,'home/index.html',context)
+                return render(request,'home/login_signup.html',context)
 
             elif(not pswd1==pswd2):
                 print('Password Missmatch')
                 context={'static_name':name,'static_mail':email,'user_error':'password Missmatch'}
-                return render(request,'home/index.html',context)
+                return render(request,'home/login_signup.html',context)
 
             elif User.objects.filter(username=email).exists():
                 print('User already exist View')
                 context={'static_name':name,'static_mail':email,'user_error':'Email already exist...'}
-                return render(request,'home/index.html',context)
+                return render(request,'home/login_signup.html',context)
 
             else:
 
@@ -112,11 +114,11 @@ def signup(request):
                 )
                 print('User_db and Driver_db Created')
 
-                return render(request,'home/index.html',{'reg_success': 'Successfully registered, Please login','static_mail':email})
+                return render(request,'home/login_signup.html',{'reg_success': 'Successfully registered, Please login','static_mail':email})
             
 
 
-        return render(request,'home/index.html')
+        return render(request,'home/login_signup.html')
 
 
 
@@ -146,7 +148,7 @@ def loginpage(request):
             if(email== '' or pswd==''):
                 print('No value')
                 context={'static_mail':email,'user_error':'Please enter valid info...'}
-                return render(request,'home/index.html',context)
+                return render(request,'home/login_signup.html',context)
 
             else:
 
@@ -172,10 +174,10 @@ def loginpage(request):
                     print(user,'user')
                     print('login failed')
                     context={'static_mail':email,'user_error':'Invalid Email and Password'}
-                    return render(request,'home/index.html',context)
+                    return render(request,'home/login_signup.html',context)
 
         
-        return render(request,'home/index.html')
+        return render(request,'home/login_signup.html')
 
 
 
@@ -250,6 +252,9 @@ def add_trip(request):
 
         )
         print('New trip created')
+
+        messages.success(request,"Trip Created Successfully")
+
         return redirect('/')
 
     # context={'already_tripExist':already_tripExist}
@@ -289,13 +294,72 @@ def add_trip(request):
 #     return render(request,'driver/add_route.html',context)
 
 
-# @login_required(login_url="signup")
-# @role_required_decorator(allowed_roles=['driver'])
-# def recent_triplist(request):
-#     trip_details_db=Trip_details.objects.filter(status='pending',driver_id=request.user.id)
+@login_required(login_url="signup")
+@role_required_decorator(allowed_roles=['driver'])
+def recent_triplist(request):
+    trip_details_db=Trip_details.objects.filter(driver_id=request.user.id).order_by('-id')
 
-#     context={'trip_details_db':trip_details_db}
-#     return render(request,'driver/recent_triplist.html',context)
+
+    if 'search_key' in request.GET:
+            
+        search_key = request.GET['search_key']
+        print(search_key)
+
+        # search key null
+        if search_key == '':
+            print('search_key empty')
+            # Paginator
+            page=Paginator(trip_details_db, 10)
+            page_list=request.GET.get('page')
+            page=page.get_page(page_list)
+
+            context={'trip_details_db':page,'required':'required'}
+            return render(request,'driver/recent_triplist.html',context)
+
+        # search key not found
+        elif Trip_details.objects.filter(
+            Q(booking_id__icontains=search_key,driver_id=request.user.id) | 
+            Q(guest_name__icontains=search_key,driver_id=request.user.id) | 
+            Q(vehicle__icontains=search_key,driver_id=request.user.id) | 
+            Q(vehicle_number__icontains=search_key,driver_id=request.user.id) | 
+            Q(reporting_address__icontains=search_key,driver_id=request.user.id) |
+            Q(releasing_address__icontains=search_key,driver_id=request.user.id)
+               
+            ).count() == 0:
+
+            print('not found ')
+            context={'not_found':'not_found','search_key':search_key}
+            return render(request,'driver/recent_triplist.html',context)
+
+        # search key avalilable
+        else:
+            print('search key avalilable')
+            trip_details_db=Trip_details.objects.filter(
+            Q(booking_id__icontains=search_key,driver_id=request.user.id) | 
+            Q(guest_name__icontains=search_key,driver_id=request.user.id) | 
+            Q(vehicle__icontains=search_key,driver_id=request.user.id) | 
+            Q(vehicle_number__icontains=search_key,driver_id=request.user.id) | 
+            Q(reporting_address__icontains=search_key,driver_id=request.user.id) |
+            Q(releasing_address__icontains=search_key,driver_id=request.user.id) 
+               
+            )
+
+            page=Paginator(trip_details_db, 10)
+            page_list=request.GET.get('page')
+            page=page.get_page(page_list)
+            
+
+            context={'trip_details_db':page,'search_key':search_key}
+            return render(request,'driver/recent_triplist.html',context)
+
+    else:
+        # default render
+        page=Paginator(trip_details_db, 10)
+        page_list=request.GET.get('page')
+        page=page.get_page(page_list)
+
+        context={'trip_details_db':page}
+        return render(request,'driver/recent_triplist.html',context)
 
 
 
@@ -417,6 +481,9 @@ def recent_trip(request,pk):
             trip_details_db.all_routes=all_routes
             trip_details_db.save()
             print('trip_details_db updated')
+
+            messages.success(request,"Trip Completed Successfully")
+
             return redirect('/')
             
         context={'trip_details_db':trip_details_db,'pk':pk,'sdate':sdate,'stime':stime}

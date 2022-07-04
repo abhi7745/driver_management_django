@@ -19,14 +19,14 @@ Driver Dashboard
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h4>Recent Trip List
+                <h4>All Trip List
                   <!-- <a href="" style="margin-left: 10px;" class="btn btn-primary">Add
                     <i style="margin-left: 15px;" class="fas fa-plus"></i>
                   </a> -->
                 </h4>
                 <div class="card-header-form">
                   <!-- Search form -->
-                  <form action="#">
+                  <form action="{% url 'recent_triplist' %}">
                     <!-- {% csrf_token %} -->
                   <div class="input-group">
                     <input style="{% if required %} border:1px solid red; {% endif %}" type="text" value="{{ search_key }}" 
@@ -42,7 +42,337 @@ Driver Dashboard
                   </div>
     
               </div>
-              <div class="card-body">
+
+
+              <div class="row" style="padding: 25px;">
+
+              {% for x in trip_details_db %}
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="card card-info">
+                  <div class="">
+                    <!-- <span class="label">new</span> -->
+                    <h4 class="card-header" style="padding-left: 15px;">
+                      Guest Name : {{x.guest_name|title}}
+                    </h4>
+                  </div>
+
+                  <div class="card-body" style="padding-top:10px;">
+
+                    <div style="display:flex;justify-content:space-between;">
+                      <b class="">Status </b>
+                      <b class="">{{x.status|title}}</b>
+                    </div>
+
+                    {% if x.booking_id %}
+                    <div style="display:flex;justify-content:space-between;margin-top:10px">
+                      <b class="">Booking ID :</b>
+                      <b class="">{{x.booking_id}}</b>
+                    </div>
+                    {% else %}
+                    <div style="display:flex;justify-content:space-between;margin-top:10px">
+                      <b class="">Booking ID :</b>
+                      <b class="">Nill</b>
+                    </div>
+
+                    {% endif %}
+                    
+                    <div style="display:flex;justify-content:space-between;margin-top:10px">
+                      <b class="">Vehicle : {{x.vehicle}}</b>
+                      <b class="">{{x.vehicle_number|capfirst}}</b>
+                    </div>
+                    <br>
+
+                    <b class="">Reporting Address</b><br>
+                    <span class="">{{x.reporting_address|title}}</span><br><br>
+
+                    <b class="">Releasing Address</b> <br>
+                    {% if x.releasing_address %}
+                    <span class="">{{x.releasing_address|title}}</span>
+                    {% else %}
+                    <span>Pending</span>
+                    {% endif %}
+
+                    <br><br>
+                    <div style="">
+                      <span class="" style="font-weight:bold;">Start Date : <span style="font-weight:normal;">{{x.start_date}}</span> </span>
+                    </div>
+
+                    <div style="">
+                      {% if x.end_date %}
+                      <span class="" style="font-weight:bold;">End Date : <span style="font-weight:normal;">{{x.end_date}}</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">End Date : <span style="font-weight:normal;">Pending</span> </span>
+                      {% endif %}
+                    </div>
+
+                    <div style="">
+                      <span class="" style="font-weight:bold;">Start Time : <span style="font-weight:normal;">{{x.start_time}}</span> </span>
+                    </div>
+
+                    <div style="">
+                      {% if x.end_time %}
+                      <span class="" style="font-weight:bold;">End Time : <span style="font-weight:normal;">{{x.end_time}}</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">End Time : <span style="font-weight:normal;">Pending</span></span>
+                      {% endif %}
+                    </div>
+
+                    <div style="">
+                      {% if x.total_km %}
+                      <span class="" style="font-weight:bold;">Total KM : <span style="font-weight:normal;">{{x.total_km}} Km</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">Total KM : <span style="font-weight:normal;">Pending</span></span>
+                      {% endif %}
+                    </div>
+
+                    <div style="">
+                      {% if x.total_time %}
+                      <span class="" style="font-weight:bold;">Total Time : <span style="font-weight:normal;">{{x.total_time}}</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">Total Time : <span style="font-weight:normal;">Pending</span></span>
+                      {% endif %}
+                    </div>
+                    
+
+                    {% comment %} <div style="display:flex;justify-content:space-between;margin-top:10px">
+                      <span class="" style="font-weight:bold;">Start Date : <span style="font-weight:normal;">{{x.start_date}}</span> </span>
+
+                      {% if x.end_date %}
+                      <span class="" style="font-weight:bold;">End Date : <span style="font-weight:normal;">{{x.end_date}}</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">End Date : <span style="font-weight:normal;">Pending</span> </span>
+                      {% endif %}
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:10px">
+                      <span class="" style="font-weight:bold;">Start Time : <span style="font-weight:normal;">{{x.start_time}}</span> </span>
+
+                      {% if x.end_time %}
+                      <span class="" style="font-weight:bold;">End Time : <span style="font-weight:normal;">{{x.end_time}}</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">End Time : <span style="font-weight:normal;">Pending</span></span>
+                      {% endif %}
+
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:10px">
+
+                      {% if x.total_km %}
+                      <span class="" style="font-weight:bold;">Total KM : <span style="font-weight:normal;">{{x.total_km}} Km</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">Total KM : <span style="font-weight:normal;">Pending</span></span>
+                      {% endif %}
+
+                      {% if x.total_time %}
+                      <span class="" style="font-weight:bold;">Total Time : <span style="font-weight:normal;">{{x.total_time}}</span> </span>
+                      {% else %}
+                      <span class="" style="font-weight:bold;">Total Time : <span style="font-weight:normal;">Pending</span></span>
+                      {% endif %}
+
+                    </div> {% endcomment %}
+
+                      <br>
+                      {% if x.all_routes %}
+                      <b class="">Route</b><br>
+                      <span class="">{{x.all_routes}}</span>
+                      {% endif %}
+
+                      <br>
+                      {% if x.remark %}
+                      <b class="">Remark</b><br>
+                      <span class="">{{x.remark|title}}</span>
+                      {% else %}
+                      <b class="">Remark</b><br>
+                      <span class="">Nill</span>
+                      {% endif %}
+
+                  </div>
+                 
+                </div>
+              </div>
+              {% endfor %}
+
+              </div>
+
+              {% if not_found %}
+              <label for="" style="text-align: center !important;">Not Found</label><br>
+              {% endif %}
+
+              
+
+
+              <!-- pagination logic using django paginator module start-->
+              {% if not trip_details_db|length == 0 %}
+
+              <!-- ////////////////////////////////////////////////////////////////////////////// -->
+              <!-- pagination logic using django paginator module start-->
+              <div class="card-footer text-center">
+                <nav class="d-inline-block">
+                  {% if not not_found %}
+                  <h6 class="">Page: {{trip_details_db.number}}/{{trip_details_db.paginator.num_pages}}</h6>
+                  {% endif %}
+                  <ul class="pagination mb-0">
+
+                    <!-- Previous start-->
+                    <li class="page-item {% if not trip_details_db.has_previous %}disabled {% endif %}">
+                      
+                      {% if not not_found %}
+
+                      {% if not trip_details_db.has_previous %}
+                      <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                      {% else %}
+
+                        <!-- pagination with search_key condition- start -->
+                        {% if not search_key %}
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{trip_details_db.previous_page_number}}" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                        {% else %}
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{trip_details_db.previous_page_number}}&search_key={{search_key}}" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                        {% endif %}
+                        <!-- pagination with search_key condition- end -->
+                      
+                      {% endif %}
+                      {% endif %}
+                    </li>
+                    <!-- Previous end-->
+
+
+                    <!-- active page number - start -->
+                    
+                    <!-- when page-number >= 7 ,then show - start-->
+                    {% if trip_details_db.number >= 7 %}
+
+                      <!-- pagination with search_key condition- start -->
+                      {% if not search_key %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page=1">1</a>
+                      </li>
+                      {% else %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page=1&search_key={{search_key}}">1</a>
+                      </li>
+                      {% endif %}
+                      <!-- pagination with search_key condition- end -->
+
+                    {% endif %}
+                    <!-- when page-number >= 7 ,then show - end-->
+                    
+                    <!-- {{ trip_details_db.number|add:'-2' }} > 1 -->
+                    {% if trip_details_db.number|add:'-2' > 1 %}
+                    <li class="page-item">
+                      <span class="page-link">&hellip;</span>
+                    </li>
+                    {% endif %}
+
+
+                    {% for i in trip_details_db.paginator.page_range %}
+
+                    {% if trip_details_db.number == i %}
+
+                      <!-- pagination with search_key condition- start -->
+                      {% if not search_key %}
+                      <li class="page-item active"><a class="page-link" href="{% url 'recent_triplist' %}?page={{i}}">{{i}}
+                        <span class="sr-only">(current)</span></a>
+                      </li>
+                      {% else %}
+                      <li class="page-item active"><a class="page-link" href="{% url 'recent_triplist' %}?page={{i}}&search_key={{search_key}}">{{i}}
+                        <span class="sr-only">(current)</span></a>
+                      </li>
+                      {% endif %}
+                      <!-- pagination with search_key condition- end -->
+
+                    {% elif i > trip_details_db.number|add:'-3' and i < trip_details_db.number|add:'3' %}
+
+                      <!-- pagination with search_key condition- start -->
+                      {% if not search_key %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{i}}">{{i}}</a>
+                      </li>
+                      {% else %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{i}}&search_key={{search_key}}">{{i}}</a>
+                      </li>
+                      {% endif %}
+                      <!-- pagination with search_key condition- end -->
+
+                    {% endif %}
+
+                    {% endfor %}
+
+
+                    <!-- {{trip_details_db.paginator.num_pages}} > {{ trip_details_db.number|add:'4' }} -->
+                    {% if trip_details_db.paginator.num_pages > trip_details_db.number|add:'2' %}
+                    <li class="page-item">
+                      <span class="page-link">&hellip;</span>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- when a page-number < total_no._of_page minus 4 ,then show last page number - start-->
+                    {% if trip_details_db.number < trip_details_db.paginator.num_pages|add:'-4' %}
+
+                      <!-- pagination with search_key condition- start -->
+                      {% if not search_key %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{trip_details_db.paginator.num_pages}}">{{trip_details_db.paginator.num_pages}}</a>
+                      </li>
+                      {% else %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{trip_details_db.paginator.num_pages}}&search_key={{search_key}}">{{trip_details_db.paginator.num_pages}}</a>
+                      </li>
+                      {% endif %}
+                      <!-- pagination with search_key condition- end -->
+                      
+                    {% endif %}
+                    <!-- when a page-number < total_no._of_page minus 4 ,then show last page number - end-->
+
+                    <!-- active page number - end -->
+
+
+                    <!-- Next start-->
+                    <li class="page-item {% if not trip_details_db.has_next %}disabled {% endif %}">
+                      {% if not not_found %}
+
+                      {% if not trip_details_db.has_next %}
+                      <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-right"></i></a>
+                      {% else %}
+                      
+                        <!-- pagination with search_key condition- start -->
+                        {% if not search_key %}
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{trip_details_db.next_page_number}}"><i class="fas fa-chevron-right"></i></a>
+                        {% else %}
+                        <a class="page-link" href="{% url 'recent_triplist' %}?page={{trip_details_db.next_page_number}}&search_key={{search_key}}"><i class="fas fa-chevron-right"></i></a>
+                        {% endif %}
+                        <!-- pagination with search_key condition- end -->
+                      
+                      {% endif %}
+
+                      {% endif %}
+                    </li>
+                    <!-- Next end-->
+
+                    
+                  </ul>
+                </nav>
+              </div>
+              <!-- pagination logic using django paginator module end-->
+              <!-- ////////////////////////////////////////////////////////////////////////////// -->
+
+              {% else %}
+
+                {% if not not_found %}
+                <label style="text-align: center !important;">Not Available</label><br>
+                {% endif %}
+
+              {% endif %}
+              <!-- pagination logic using django paginator module end-->
+
+
+
+
+
+
+
+
+              {% comment %} <div class="card-body">
                 <div class="table-responsive">
                   <table class="table table-striped" id="table-2">
                     <thead>
@@ -54,13 +384,13 @@ Driver Dashboard
                             <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
                           </div>
                         </th> -->
-                        {% comment %} <th>Driver_Name</th> {% endcomment %}
-                        <th>Guest_Name</th>
-                        <th>Address</th>
+                        <th>Guest Name</th>
+                        <th>Status</th>
                         <th>Vehicle</th>
-                        <th>Start_date</th>
-                        <th>Start_time</th>
-                        <th>Start_KM</th>
+                        <th>Start Date</th>
+                        <th>Start Time</th>
+                        <th>End Date</th>
+                        <th>End Time</th>
                         <th>More</th>
                         
                       </tr>
@@ -77,11 +407,13 @@ Driver Dashboard
                           </div>
                         </td> -->
     
-                        <td>{{x.guest_name}}</td>
-                        <td>{{x.address}}</td>
+                        <td>{{x.guest_name|title}}</td>
+                        <td>{{x.status}}</td>
                         <td>{{x.vehicle}}</td>
                         <td>{{x.start_date}}</td>
                         <td>{{x.start_time}}</td>
+                        <td>{{x.end_date}}</td>
+                        <td>{{x.end_time}}</td>
                         <td>{{x.start_km}}</td>
 
                         <td><a href="{% url 'recent_trip' x.id %}" class="btn btn-primary">Complete Trip</a></td>
@@ -99,7 +431,7 @@ Driver Dashboard
               <label for="" style="text-align: center !important;">Not Found</label><br>
               {% elif trip_details_db|length == 0 %}
               <label style="text-align: center !important;">Not Available</label><br>
-              {% endif %}
+              {% endif %} {% endcomment %}
 
     
     
