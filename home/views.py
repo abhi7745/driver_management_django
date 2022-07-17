@@ -21,6 +21,12 @@ from django.http import JsonResponse
 
 from django.contrib import messages
 
+import random
+
+# email sending
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 # Create your views here.
 
@@ -38,9 +44,60 @@ def index(request):
             print('driver is already logged in')
             return redirect('add_trip')
 
-    else:        
+    else:      
         return render(request,'home/index.html')
 
+# contact_form to send mail to (admin and user)
+def contact_form(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        phone = request.POST['phone']
+        email = request.POST['email']
+        msg = request.POST['msg']
+
+        name = name.capitalize()
+        msg = msg.capitalize()
+        email = email.lower()
+        # print(name)
+        # print(phone)
+        # print(email)
+        # print(msg)
+
+        if len(phone) < 10 or len(phone) > 10:
+            print('Invalid phone number')
+            return JsonResponse({'success':False},safe=False)
+
+        else:
+            print('Email sending')
+            # email sending section
+
+            # sending to admin
+            mydict1 = {'name':name,'phone':phone,'email':email,'msg':msg}
+            html_template1 = 'email_templates/contact_us/contact-us-reponse-admin-mail.html'
+            html_message1 = render_to_string(html_template1, context=mydict1)
+            subject1 = 'Contact-us Mail'
+            email_from1 = settings.EMAIL_HOST_USER
+            recipient_list1 = [settings.EMAIL_HOST_USER]
+            message1 = EmailMessage(subject1, html_message1, email_from1, recipient_list1)
+            message1.content_subtype = 'html'
+            message1.send()
+            print('email sended to admin')
+
+            # sending to user
+            mydict2 = {'name':name}
+            html_template2 = 'email_templates/contact_us/contact-us-reponse-user-mail.html'
+            html_message2 = render_to_string(html_template2, context=mydict2)
+            subject2 = 'Thank you for your response'
+            email_from2 = settings.EMAIL_HOST_USER
+            recipient_list2 = [email]
+            message2 = EmailMessage(subject2, html_message2, email_from2, recipient_list2)
+            message2.content_subtype = 'html'
+            message2.send()
+            print('email sended to user')
+
+            return JsonResponse({'success':True},safe=False)
+    else:
+        return redirect('/')
 
 def signup(request):
 
@@ -187,11 +244,139 @@ def logoutpage(request):
     return redirect('/')
 
 
+# def forgot_password(request):
+#     return render(request,'home/forgot_password.html')
+
+
+
+# Forgot Password logic
+def forgot_password(request):
+    if request.method=='POST':
+        email=request.POST.get('email')
+        print(email)
+
+        if User.objects.filter(username=email).exists():
+            print('email exist')
+
+            # username fetching
+            User_db=User.objects.get(username=email)
+            if User_db.role == 'driver':
+                username=User_db.driver.name
+            else:
+                # username='Admin'
+                messages.success(request, 'Please contact your System Administrator')
+                return render(request,'home/forgot_password.html',{'email':email})
+            
+            print(username,'??????????????????????')
+
+            otp = str(random.randint(10000 , 99999))# random otp generator
+            print(otp)
+            # saving email and otp in session for verify and after resetting password
+            request.session['email'] = email
+            request.session['otp'] = otp
+            request.session['verification'] = 'verify' #verification is a checker session_key(if a view(verify_otp,password_reset) is valid or not)
+            
+            # email sending area
+            mydict={'username':username,'otp':otp}
+            html_template = 'email_templates/forgot_psd_email_sender.html'
+            html_message = render_to_string(html_template, context=mydict)
+            subject = 'Password Reset Verification Code'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [email]
+            message = EmailMessage(subject, html_message,
+                                    email_from, recipient_list)
+            message.content_subtype = 'html'
+            message.send()
+            print('email send successfully')
+
+            return redirect('verify_otp')
+
+        else:
+            print('email does not exist')
+            messages.success(request, 'Email does not exist')
+            return render(request,'home/forgot_password.html',{'email':email})
+
+
+    return render(request,'home/forgot_password.html',{})
+
+def verify_otp(request):
+    email=request.session.get('email')
+    otp=request.session.get('otp')
+    verification=request.session.get('verification')
+    print(email,'session')
+    print(otp,'session')
+    print(verification,'session')
+
+    if not verification == 'verify':
+        return redirect('/')
+
+    else:
+        if request.method == 'POST':
+            form_otp = request.POST.get('otp')
+            print(otp)
+
+            if otp == form_otp:
+                print('verified')
+                request.session['verification'] = 'set_password' #verification is a checker session_key
+                return redirect('password_reset')
+            else:
+                print('wrong verification code')
+                messages.success(request, 'Wrong verification code')
+                return render(request,'home/verify_otp.html',{'otp':form_otp,'email':email})
+
+    return render(request,'home/verify_otp.html',{'email':email})
+
+def password_reset(request):
+    email=request.session.get('email')
+    verification=request.session.get('verification')
+    print(email,'session')
+    print(verification,'session')
+
+    if not verification == 'set_password':
+        return redirect('/')
+
+    else:
+        if request.method == 'POST':
+            psd = request.POST.get('psd')
+            confirm_psd = request.POST.get('confirm_psd')
+            # print(psd)
+            # print(confirm_psd)
+
+            if(len(psd)<6):
+                print('Password length too short.')
+                messages.success(request, 'Password must have at least 6 characters')
+                return render(request,'home/password_reset.html',{'psd':psd,'confirm_psd':confirm_psd})
+
+            elif not psd == confirm_psd:
+                print('Password must be same')
+                messages.success(request, 'Password must be same')
+                return render(request,'home/password_reset.html',{'psd':psd,'confirm_psd':confirm_psd})       
+
+            else:
+                if User.objects.filter(username=email).exists():
+                    User_db=User.objects.get(username=email)
+                    # print(User_db.password)
+                    # print(User_db.username)
+
+                    User_db.set_password(psd)
+                    User_db.save()
+                    print('Password reset successfully')
+                    messages.success(request, 'Your password has been changed successfully')
+                    request.session.flush() # deleting all password_reset session from "database and browser"
+                    return redirect('login')
+
+                else:
+                    return redirect('/')
+            
+
+    return render(request,'home/password_reset.html',{})
+# Forgot Password logic
+
+
 
 # /////////////////////////////////////////////////////////////////////////////////////////////////////
 # driver area
 import base64
-import random
 from django.core.files.base import ContentFile
 
 @login_required(login_url="signup")
@@ -254,6 +439,22 @@ def add_trip(request):
         print('New trip created')
 
         messages.success(request,"Trip Created Successfully")
+
+        # email sending section
+        mydict = {'driver_name':driver_name,'guest_name':guest_name,'booking_id':booking_id,'reporting_address':reporting_address,
+                'start_date':start_date,'vehicle':vehicle,'vehicle_number':vehicle_number,
+                'start_km':start_km,'start_time':start_time,'saver_name':saver_name
+        }
+
+        html_template = 'email_templates/start_report_email.html'
+        html_message = render_to_string(html_template, context=mydict)
+        subject = 'Trip Start Report'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [settings.EMAIL_HOST_USER]
+        message = EmailMessage(subject, html_message, email_from, recipient_list)
+        message.content_subtype = 'html'
+        message.send()
+        print('email sended')
 
         return redirect('/')
 
@@ -484,6 +685,23 @@ def recent_trip(request,pk):
 
             messages.success(request,"Trip Completed Successfully")
 
+            # email sending section
+            # mydict = {'trip_details_db':trip_details_db,'end_date':end_date,'end_time':end_time,'end_km':end_km,
+            # 'remark':remark,'releasing_address':releasing_address,'total_time':total_time,'total_km':total_km,
+            # 'all_routes':all_routes
+            # }
+            mydict = {'trip_details_db':trip_details_db}
+
+            html_template = 'email_templates/end_report_email.html'
+            html_message = render_to_string(html_template, context=mydict)
+            subject = 'Trip End Report'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [settings.EMAIL_HOST_USER]
+            message = EmailMessage(subject, html_message, email_from, recipient_list)
+            message.content_subtype = 'html'
+            message.send()
+            print('email sended')
+
             return redirect('/')
             
         context={'trip_details_db':trip_details_db,'pk':pk,'sdate':sdate,'stime':stime}
@@ -674,8 +892,8 @@ def trip_list(request):
 
 
 
-@login_required(login_url="signup")
-@role_required_decorator(allowed_roles=['admin'])
+# @login_required(login_url="signup")
+# @role_required_decorator(allowed_roles=['admin'])
 def dutyslip(request,pk):
     if Trip_details.objects.filter(id=pk,status='completed').exists():
         trip_details_db=Trip_details.objects.get(id=pk,status='completed')

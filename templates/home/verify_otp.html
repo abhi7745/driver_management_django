@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'login_signup/main.css' %}">
+</head>
+<body>
+    <div class="form-modal">
+    
+        <div class="form-toggle">
+            <button id="login-toggle" >Verify OTP</button>
+        </div>
+    
+        <div id="login-form">
+            <form action="{% url 'verify_otp' %}" method="post">
+                {%csrf_token%}
+                <input type="text" name="otp" placeholder="Enter OTP" value="{{otp}}" required="" />
+                <button type="submit" class="btn login">Verify</button>
+
+                <div style="text-align:center">
+                    <a href="/" style="text-decoration:none;">Back</a>
+                </div>
+                {% comment %} <p><a href="javascript:void(0)">Forgotten account</a></p> {% endcomment %}
+                <hr/>
+    
+            </form>
+        </div>
+    
+       
+    
+    </div>
+    <script src="{% static 'login_signup/script.js' %}"></script>
+
+    <script>
+        {% if messages %}
+            {% for message in messages %}
+                alert('{{message}}')
+            {% endfor %}
+        {% endif %}
+    </script>
+</body>
+</html>

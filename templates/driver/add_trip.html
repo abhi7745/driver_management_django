@@ -243,7 +243,7 @@ Driver Dashboard
                             {% comment %} <button class="btn btn-primary">Save</button> {% endcomment %}
                             
                             <a href="javascript:void(0);" id="clear-signature" class="btn btn-secondary">Clear</a>
-                            <button id="save" class="btn btn-primary ">Submit</button>
+                            <button id="save" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -400,6 +400,7 @@ Driver Dashboard
       }
       else{
         //alert('validation successfull new');
+        submitFunction();
         return true;
       }
 
@@ -496,6 +497,17 @@ Driver Dashboard
     {%  endfor %}
 
     {% endif %}
+  </script>
+
+
+  <script>
+
+    // on form validate event 
+    function submitFunction(){
+        var element = document.getElementById("save");
+        element.classList.add("btn-progress","disabled");
+    }
+    
   </script>
   
 {% endblock scripts %}

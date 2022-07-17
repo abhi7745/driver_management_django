@@ -2,207 +2,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duty slip</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="dutyslip.css"> -->
-    <link rel="stylesheet" href="{% static 'dutyslip/duty_bootsrap.min.css' %}">
-    <style type="text/css">
-                    .container{
-                display: flex;
-            }
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-              }
-              td,th{
-                height: 25px;
-              }
-    </style>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://dennystoursandtravels.in/static/home/assets/img/dennyspng%20(1).png" rel="icon" />
+<title>Denny's Tours & Travels</title>
+<meta name="author" content="harnishdesign.net">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous"/>
+
+<!-- Web Fonts
+======================= -->
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900' type='text/css'>
+
+<!-- Stylesheet
+======================= -->
+<link rel="stylesheet" type="text/css" href="{% static 'email_templates/vendor/bootstrap/css/bootstrap.min.css' %} "/>
+<link rel="stylesheet" type="text/css" href="{% static 'email_templates/vendor/font-awesome/css/all.min.css' %} "/>
+<link rel="stylesheet" type="text/css" href="{% static 'email_templates/css/stylesheet.css' %} "/>
+
 </head>
-<body style="margin-left: 25px;">
+<body>
+  
 
+<!-- Container -->
+<div class="container-fluid invoice-container"> 
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="nav_hider">
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          
-          <div class="form-inline my-2 my-lg-0 m-auto">
-            
-            <a href="{% url 'trip_list' %}" class="btn btn-outline-success my-2 my-sm-0" style="margin-right:10px;">Back</a>
-            <button class="btn btn-outline-success my-2 my-sm-0" id="print" onclick="print_body();">Print</button>
-            </div>
-        </div>
-      </nav>
-
-
-
-    <div class="container" style="margin: 25px;"></div>
-        <div class="row1" >
-            <h5 style="font-weight:bold ;">Denny's Tours&Travels</h5>
-            <p>#G16, Ground Floor,<br> Divya Enclave Behind Hotel Deepa Comforts MG Road,<br> Mangalore, 575003</p>
-
-        </div>
-        <div class="row2"> 
-            <hr>
-            <h3 style="text-align: center; ">DUTY SLIP <hr></h3>
-        </div>
-     
-
-          <div class="row">
-            <div class="col">
-                <h5>Passenger : {{trip_details_db.guest_name|title}}</h5>
-                <h5>Date : {% now "d/m/Y" %}</h5>
-                <h5>Reporting address : {{trip_details_db.reporting_address|title}}</h5>
-                <h5>Reporting date : {{trip_details_db.start_date}}</h5>
-                
-            </div>
-            <div class="col">
-                <h5>Driver : {{trip_details_db.driver_name|title}}</h5>
-                <h5>Booking id : {{trip_details_db.booking_id|title}}</h5>
-                <h5>Releasing Address : </span>{{trip_details_db.releasing_address}}</h5>
-                <h5>Vehicle Number: {{trip_details_db.vehicle_number|capfirst}}</h5>
-                <h5>Vehicle type : {{trip_details_db.vehicle|title}}</h5>
-                {% comment %} <h5>Remarks:</h5> {% endcomment %}
-            </div>
-          </div>
-        </div>
+  <div class="text-center">
+    <div class="btn-group btn-group-sm d-print-none"> 
+      <a href="{% url 'trip_list' %}" class="btn btn-light border text-black-50 shadow-none" ><i class="fa fa-arrow-left"></i> Back</a> 
+      <a style="width: 100px;" href="javascript:window.print()" class="btn btn-light border text-black-50 shadow-none"><i class="fa fa-print"></i> Print</a>
+       <!-- <a href="" class="btn btn-light border text-black-50 shadow-none"><i class="fa fa-download"></i> Download</a>  -->
       </div>
-    <table style="width:100%">
-        <tr>
+  </div>
+
+
+  <!-- Header -->
+  <header>
+    <div class="row align-items-center">
+      <div class="col-sm-7 text-center text-sm-start mb-3 mb-sm-0"> <img id="logo" src="https://dennystoursandtravels.in/static/home/assets/img/dennyspng%20(1).png" style="height: 60px;width: 100px;"  title="Denny's Tours & Travels" alt="Denny's Tours & Travels" /> </div>
+      <div class="col-sm-5 text-center text-sm-end">
+        <h4 class="mb-0">Duty Slip</h4>
+        <!-- <p class="mb-0">Invoice Number - 16835</p> -->
+      </div>
+    </div>
+    <hr>
+  </header>
+  <!-- Main Content -->
+  <main>
+
+    <!-- basic details -->
+    <div class="row">
+      <div class="col">
+        <strong>Passenger : <span style="font-weight: normal;">{{trip_details_db.guest_name|title}}</span> </strong><br>
+        <strong>Date : <span style="font-weight: normal;">{% now "d/m/Y" %}</span> </strong><br>
+        <strong>Reporting address : <span style="font-weight: normal;">{{trip_details_db.reporting_address|title}}</span> </strong><br>
+        <strong>Reporting date : <span style="font-weight: normal;">{{trip_details_db.start_date}}</span> </strong><br>
+        <strong>Vehicle type : <span style="font-weight: normal;">{{trip_details_db.vehicle|title}}</span> </strong>
+          
+      </div>
+      <div class="col">
+        <strong>Driver : <span style="font-weight: normal;">{{trip_details_db.driver_name|title}}</span> </strong><br>
+        <strong>Booking id : 
+          {% if trip_details_db.booking_id %}
+          <span style="font-weight: normal;">{{trip_details_db.booking_id|title}}</span>
+          {% else %}
+          <span style="font-weight: normal;">Nill</span>
+          {% endif %}
+        </strong><br>
+        <strong>Releasing Address : <span style="font-weight: normal;">{{trip_details_db.releasing_address}}</span> </strong><br>
+        <strong>Releasing date : <span style="font-weight: normal;">{{trip_details_db.end_date}}</span> </strong><br>
+        <strong>Vehicle Number: <span style="font-weight: normal;">{{trip_details_db.vehicle_number|capfirst}}</span> </strong>
+      </div>
+    </div>
+    <br>
+
+  
+    {% comment %} <!-- old basic details -->
+    <div>
+      <div style="display: flex;justify-content:space-between;">
+        <strong>Passenger : <span style="font-weight: normal;">{{trip_details_db.guest_name|title}}</span> </strong>
+        <strong>Driver : <span style="font-weight: normal;">{{trip_details_db.driver_name|title}}</span> </strong>
+      </div>
+      <div style="display: flex;justify-content:space-between;">
+        <strong>Date : <span style="font-weight: normal;">{% now "d/m/Y" %}</span> </strong>
+        <strong>Booking id : 
+          {% if trip_details_db.booking_id %}
+          <span style="font-weight: normal;">{{trip_details_db.booking_id|title}}</span>
+          {% else %}
+          <span style="font-weight: normal;">Nill</span>
+          {% endif %}
+        </strong>
+      </div>
+      <div style="display: flex;justify-content:space-between;">
+        <strong>Reporting address : <span style="font-weight: normal;">{{trip_details_db.reporting_address|title}}</span> </strong>
+        <strong>Releasing Address : <span style="font-weight: normal;">{{trip_details_db.releasing_address}}</span> </strong>
+      </div>
+      <div style="display: flex;justify-content:space-between;">
+        <strong>Reporting date : <span style="font-weight: normal;">{{trip_details_db.start_date}}</span> </strong>
+        <strong>Releasing date : <span style="font-weight: normal;">{{trip_details_db.end_date}}</span> </strong>
+      </div>
+      <div style="display: flex;justify-content:space-between;">
+        <strong>Vehicle type : <span style="font-weight: normal;">{{trip_details_db.vehicle|title}}</span> </strong>
+        <strong>Vehicle Number: <span style="font-weight: normal;">{{trip_details_db.vehicle_number|capfirst}}</span> </strong>
+      </div>
+    </div> {% endcomment %}
+
+    <!-- Duty Slip -->
+    {% comment %} <h4 class="text-4 mt-2" style="text-align: center;">Duty Slip</h4> {% endcomment %}
+    <!-- table-1 -->
+    <div class="table-responsive">
+      <table class="table table-bordered text-1 table-sm">
+        <thead>
+          <tr>
             <th rowspan="2">Date</th>
             <th colspan="2">Start</th>
             <th colspan="2">End</th>
             <th colspan="2">Total</th>
             <th rowspan="2">Driver Signature</th>
-        </tr>
-        <tr>
+          </tr>
+          <tr>
             <th>Kilometers</th>
             <th>time</th>
             <th>Kilometers</th>
             <th>time</th>
             <th>Kilometers</th>
             <th>time</th>
-            
-        </tr>
-        <tr>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
             <td>{{trip_details_db.start_date}}</td>
             <td>{{trip_details_db.start_km}}</td>
             <td>{{trip_details_db.start_time}}</td>
             <td>{{trip_details_db.end_km}}</td>
             <td>{{trip_details_db.end_time}}</td>
-            <td>{{trip_details_db.total_km}}</td>
+            <td>{{trip_details_db.total_km}}	</td>
             <td>{{trip_details_db.total_time}}</td>
-            <td style="text-align:center;">
-                <img src="{{trip_details_db.driver_signature.url}}" alt="signature" width="90px" height="50px">
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        
-    </table>
-    <table style="width: 100%; margin-top: 20px;">
-        <tr>
-            <th colspan="5"></th>
-        </tr>
-        <tr>
+            <td><img id="logo" src="{{trip_details_db.driver_signature.url}}" style="height: 50px;width: 90px;"  title="driver_signature" alt="driver_signature" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- table-2 -->
+    <div class="table-responsive">
+      <table class="table table-bordered text-1 table-sm">
+        <thead>
+          <tr>
             <th>Date</th>
-            <th>Reporting KM</th>
+            <th>Reporting Km</th>
             <th>Reporting Time</th>
-            <th>Released KM</th>
-            <th>Released Time</th>
-        </tr>
-        <tr>
-
+            <th>Releasing Km</th>
+            <th>Releasing Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
             <td>{{trip_details_db.end_date}}</td>
             <td>{{trip_details_db.start_km}}</td>
             <td>{{trip_details_db.start_time}}</td>
             <td>{{trip_details_db.end_km}}</td>
             <td>{{trip_details_db.end_time}}</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
-    <table style="width: 100%; margin-top: 20px;">
-        <tr>
-            <th colspan="2"></th>
-        </tr>
-        <tr>
-            <td style="height: 45px;"><span style="font-weight:bold;">Remarks :</span> {{trip_details_db.remark}}</td>
-            <td style="text-align:center;">
-                <span style="font-weight:bold;">Guest Signature</span> <br>
-                <img src="{{trip_details_db.guest_signature.url}}" alt="signature" width="90px" height="50px">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="height: 45px;">
-                {% comment %} <span style="font-weight:bold;">Reporting Address :</span> {{trip_details_db.reporting_address}} <br><br> {% endcomment %}
-                
-                <span style="font-weight:bold;">Route Address:-</span>
-                {{trip_details_db.all_routes}}
-                {% comment %} <ol>
-                    {% for x in route_db %}
-                    <li>{{x.route}}</li>
-                    {% endfor %}
-                </ol> {% endcomment %}
-                {% comment %} <span style="font-weight:bold;">Releasing Address : </span>{{trip_details_db.releasing_address}}</td> {% endcomment %}
-        </tr>
-        {% comment %} <tr>
-            <td colspan="2">Instruction for next day use:</td>
-        </tr> {% endcomment %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- table-3 -->
+    <div class="table-responsive">
+      <table class="table table-bordered text-1 table-sm">
+        <thead>
+          <tr>
+            <th >Remark</th>
+            <th >Guest Signature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% if trip_details_db.remark %}
+            <td>{{trip_details_db.remark}}</td>
+            {% else %}
+            <td>Nill</td>
+            {% endif %}
+            <td><img id="logo" src="{{trip_details_db.guest_signature.url}}" style="height: 50px;width: 90px;"  title="guest_signature" alt="guest_signature" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- table-4 -->
+    <div class="table-responsive">
+      <table class="table table-bordered text-1 table-sm">
+        <thead>
+          <tr>
+            <th>Route Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{trip_details_db.all_routes}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    </table>
-
-
+  </main>
+  <!-- Footer -->
+  <footer class="text-center">
+    <hr>
 
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <p>
+      <strong>Denny's Tours & Travels</strong><br>
+      <i class="fa fa-map-marker" aria-hidden="true">&nbsp;</i>Divya Enclave, MG Road, Mangalore 575003<br>
+      <i class="fa fa-map-marker" aria-hidden="true">&nbsp;</i>Dennys tours and Travels Thekkilakkattu Building, Parathode Idukki<br>
+      <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;8884725699,
+      8095275699&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <i class="fa fa-envelope" aria-hidden="true"></i> &nbsp; travelsdennis@gmail.com
+    </p>
+    <hr>
+    <!-- <p class="text-1"><strong>NOTE :</strong> This is computer generated receipt and does not require physical signature.</p> -->
+    <div class="btn-group btn-group-sm d-print-none"> 
+      <a href="{% url 'trip_list' %}" class="btn btn-light border text-black-50 shadow-none" ><i class="fa fa-arrow-left"></i> Back</a> 
+      <a style="width: 100px;" href="javascript:window.print()" class="btn btn-light border text-black-50 shadow-none"><i class="fa fa-print"></i> Print</a>
+       <!-- <a href="#" class="btn btn-light border text-black-50 shadow-none" ><i class="fa fa-download"></i> Download</a>  -->
+      </div>
+  </footer>
+</div>
+<!-- Back to My Account Link -->
+<p class="text-center d-print-none"><a href="{% url 'trip_list' %}">&laquo; Back</a></p>
 
-    <script>
-        function print_body(){
-            //const navbar = document.getElementById("nav_hider");
-            //navbar.remove();
-            window.print();
-            }
-    </script>
 </body>
-
 </html>

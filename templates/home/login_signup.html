@@ -23,8 +23,9 @@
                 <input type="password" name="pswd" placeholder="Enter password" required="" />
                 <button type="submit" class="btn login">login</button>
 
-                <div style="text-align:center">
+                <div style="display:flex;justify-content:space-between;">
                     <a href="/" style="text-decoration:none;">Back</a>
+                    <a href="{% url 'forgot_password' %}" style="text-decoration:none;">Forgot Password</a>
                 </div>
                 {% comment %} <p><a href="javascript:void(0)">Forgotten account</a></p> {% endcomment %}
                 <hr/>
@@ -41,8 +42,9 @@
                 <input type="password" name="pswd2" placeholder="Confirm password" required="" />
                 <button type="submit" name="" class="btn signup">create account</button>
 
-                <div style="text-align:center">
+                <div style="display:flex;justify-content:space-between;">
                     <a href="/" style="text-decoration:none;">Back</a>
+                    <a href="{% url 'forgot_password' %}" style="text-decoration:none;">Forgot Password</a>
                 </div>
                 <!-- <p>Clicking <strong>create account</strong> means that you are agree to our <a href="javascript:void(0)">terms of services</a>.</p> -->
                 <hr/>
@@ -51,7 +53,7 @@
         </div>
     
     </div>
-    <script src="{% static 'login_signup/script.js' %}"></script>
+   
 
     <script>
         {% if user_error %}
@@ -61,5 +63,23 @@
         {% endif %}
         
     </script>
+
+    <!-- password reset sucessfully message -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+    {% if messages %}
+
+    {% for message in messages %}
+
+    swal("Password Changed!", "{{message}}", "success");
+    
+    {%  endfor %}
+
+    {% endif %}
+    </script>
+    <!-- password reset sucessfully message -->
+
+    <script src="{% static 'login_signup/script.js' %}"></script>
+
 </body>
 </html>

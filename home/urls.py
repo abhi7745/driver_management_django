@@ -4,9 +4,14 @@ from . import views
 
 urlpatterns=[
     path("",views.index,name="index"),
+    path("contact_form",views.contact_form,name="contact_form"),
     path("signup",views.signup,name="signup"),
     path("login",views.loginpage,name="login"),
     path("logout",views.logoutpage,name="logout"),
+    # forgot_password
+    path("forgot_password",views.forgot_password,name="forgot_password"),
+    path('verify_otp/',views.verify_otp,name='verify_otp'),
+    path('password_reset/',views.password_reset,name='password_reset'),
 
     # driver area
     path("add_trip",views.add_trip,name="add_trip"),
